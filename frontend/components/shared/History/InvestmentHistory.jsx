@@ -1,39 +1,3 @@
-// const transactions = [
-//     { date: "2024-11-29", sender: "John Doe", amount: "500", status: "Completed" },
-//     { date: "2024-11-28", sender: "Jane Smith", amount: "250", status: "Pending" },
-//     { date: "2024-11-27", sender: "Alice Brown", amount: "750", status: "Failed" },
-//     { date: "2024-11-26", sender: "Michael Green", amount: "1200", status: "Completed" },
-//   ];
-
-
-// const TransactionHistory = () => {
-
-//     return <section>
-//         <div className="grid grid-cols-[1fr,1fr,1fr,1fr]">
-//             <p>Date</p>
-//             <p>Sender</p>
-//             <p>Amount</p>
-//             <p>Status</p>
-//         </div>
-//         {transactions.map((item,index) =>         
-        
-//         <div className="grid grid-cols-[1fr,1fr,1fr,1fr]">
-//             <p>{item.date}</p>
-//             <p>{item.sender}</p>
-//             <p>{item.amount}</p>
-//             <p>{item.status}</p>
-//         </div>
-//         )}
-//     </section>
-
-    
-
-
-// };
-
-
-// export default TransactionHistory;
-
 
 
 "use client"
@@ -85,10 +49,10 @@ const InvestmentHistory = () => {
                 <h2 className="">Investment History</h2>
             </div>
 
-            <div>
+            <div className="border-2 h-[fit-content] p-1">
                 {/* Filter Button */}
-                <button className="filter-button flex" onClick={() => setIsModalOpen(true)}>
-                <p className="m-auto"m-auto>Filter By:</p> <img src="/icons/filter.svg" alt="Profile Picture" className="object-cover m-auto"
+                <button className="filter-button flex m-auto" onClick={() => setIsModalOpen(true)}>
+                <p className="m-auto">Filter By:</p> <img src="/icons/filter.svg" alt="Profile Picture" className="object-cover m-auto"
                 />
                 </button>
             </div>
@@ -139,38 +103,33 @@ const InvestmentHistory = () => {
                 </div>
             )}
 
+        <div className="grid grid-cols-[1fr,1fr,1fr,1fr,1fr] transaction-table-container w-[95%] rounded-2xl">
 
-      <table>
-        <thead>
+             
+            <p>Date</p>
+            <p>Amount Locked</p>
+            <p>Interest Rate</p>
+            <p>Duration</p>
+            <p>Status</p>
 
-          <tr>
-
-            <th>Date</th>
-            <th>Amount Locked</th>
-            <th>Interest Rate</th>
-            <th>Duration</th>
-            <th>Status</th>
-
-          </tr>
-        </thead>
-        <tbody>
-          {filteredTransactions.length > 0 ? (
+         </div>       
+         {filteredTransactions.length > 0 ? (
             filteredTransactions.map((txn, index) => (
-              <tr key={index}>
-                <td>{txn.date}</td>
-                <td>{txn.amountlocked}</td>
-                <td>{txn.interestrate}</td>
-                <td>{txn.duration}</td>
-                <td>{txn.status}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4">No Investment History found</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+         <div>
+              <div key={index} className="grid grid-cols-[1fr,1fr,1fr,1fr,1fr]  table-details">
+                <p>{txn.date}</p>
+                <p>{txn.amountlocked}</p>
+                <p>{txn.interestrate}</p>
+                <p>{txn.duration}</p>
+                <p>{txn.status}</p>
+              </div>
+         </div>
+          ))
+        ) : (
+          <tr>
+            <h1 colSpan="4">No Investment History found</h1>
+          </tr>
+        )}
       
     </div>
   );

@@ -1,4 +1,3 @@
-import React from 'react';
 
 "use client";
 import React, { useState } from "react";
@@ -39,20 +38,19 @@ const Header = () => {
     <div className="header flex justify-between items-center h-[88px] m-auto px-4">
       {/* Logo Section */}
       <div className="flex items-center">
-        <img
-          src="/icons/material-symbols-light_task-outline.svg"
-          alt="Product"
-          className="h-full"
-        />
-        <Link href="#">LockUp</Link>
+        <a href="/">
+          <img src="logo/logo.svg"/>
+        </a>
+        
       </div>
 
       {/* Desktop Navigation */}
       <div className="hidden md:flex gap-[30px]">
         <div className="flex items-center">
           <img src="/icons/home.svg" alt="Product" className="h-full" />
-          <Link href="#">Dashboard</Link>
+          <Link href="/">Dashboard</Link>
         </div>
+
         <div className="flex items-center">
           <img
             src="/icons/fluent_payment-20-regular.svg"
@@ -61,6 +59,17 @@ const Header = () => {
           />
           <Link href="#">P2P Marketplace</Link>
         </div>
+
+        
+        <div className="flex items-center">
+          <img
+            src="/icons/fluent_payment-20-regular.svg"
+            alt="Product"
+            className="h-full"
+          />
+          <Link href="exchange">P2P Exchange</Link>
+        </div>
+
         <div className="flex items-center">
           <img
             src="/icons/streamline_investment-selection.svg"
@@ -69,6 +78,7 @@ const Header = () => {
           />
           <Link href="#">Assets</Link>
         </div>
+
         <div className="flex items-center">
           <img
             src="/icons/streamline_investment-selection.svg"
@@ -77,6 +87,7 @@ const Header = () => {
           />
           <Link href="#">Investments</Link>
         </div>
+
       </div>
 
       {/* Mobile Hamburger Menu */}
@@ -110,7 +121,7 @@ const Header = () => {
           <div className="flex flex-col gap-4 p-4">
             <div className="flex items-center">
               <img src="/icons/home.svg" alt="Product" className="h-6" />
-              <Link href="#">Dashboard</Link>
+              <Link href="index">Dashboard</Link>
             </div>
             <div className="flex items-center">
               <img
@@ -120,6 +131,17 @@ const Header = () => {
               />
               <Link href="#">P2P Marketplace</Link>
             </div>
+
+            
+            <div className="flex items-center">
+              <img
+                src="/icons/fluent_payment-20-regular.svg"
+                alt="Product"
+                className="h-6"
+              />
+              <Link href="#">P2P </Link>
+            </div>
+
             <div className="flex items-center">
               <img
                 src="/icons/streamline_investment-selection.svg"

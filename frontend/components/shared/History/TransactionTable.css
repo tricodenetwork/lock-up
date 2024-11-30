@@ -1,13 +1,21 @@
 .transaction-table-container {
     min-width: 47%;
-    margin: 20px auto;
-    padding: 20px;
+    margin: 10px auto;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     background-color: #fff;
   }
   
+  .table-details {
+    min-width: 47%;
+    margin: 10px auto;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+
   h2 {
     text-align: center;
     margin-bottom: 20px;
@@ -31,8 +39,7 @@
   
   table {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+    /* border-collapse: collapse; */
   }
   
   th,
@@ -43,13 +50,13 @@
   }
   
   th {
-    background-color: #407ce2;
-    color: #fff;
+    /* background-color: #407ce2; */
+    color: black;
   }
   
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
+tr:nth-child(even){background-color: #f2f2f2;}
+
+tr:hover {background-color: #ddd;}
 
   /* Modal Styles */
 .modal-overlay {
