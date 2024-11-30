@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { ProvidersAndLayout } from "./ProvidersAndLayout";
 import "./globals.css";
 import "@mysten/dapp-kit/dist/index.css";
-import Header from "@/components/header/Header";
+import Header from "@/components/shared/header/Header";
 
 export const metadata: Metadata = {
   title: "Enoki Example App",
