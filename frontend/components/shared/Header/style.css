@@ -1,0 +1,45 @@
+.header {
+    border-bottom: 2px solid #C4C4C4
+}
+
+/* Default styles (desktop) */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Media Query for Mobile View */
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;  /* Stack elements vertically on mobile */
+      align-items: flex-start;
+    }
+  
+    /* Adjust search bar and profile picture position on mobile */
+    .header .flex.items-center {
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+  
+    /* Make the profile picture larger on mobile */
+    .header .w-10 {
+      width: 40px;
+      height: 40px;
+    }
+  
+    /* Adjust search input width on mobile */
+
+    @media(max-width:800px) {
+        .header {
+          width: 100%;  /* Full width for search bar */
+        }
+      
+        /* Add some margin to the lockup text */
+        .header .space-x-4 {
+          margin-bottom: 10px;
+        }
+    }
+  }
+  
