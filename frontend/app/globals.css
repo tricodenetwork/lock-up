@@ -7,6 +7,19 @@
   --foreground: #171717;
 }
 
+.header {
+    border-bottom: 2px solid #C4C4C4
+}
+
+/* Default styles (desktop) */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
