@@ -202,43 +202,7 @@ tr:hover {background-color: #ddd;}
   opacity: 0.9;
 }
 
-/* Responsive Styles */
-  @media (max-width: 768px) {
-    table,
-    thead,
-    tbody,
-    th,
-    td,
-    tr {
-      display: block;
-    }
-  
-    th {
-      position: absolute;
-      top: -9999px;
-      left: -9999px;
-    }
-  
-    td {
-      border: none;
-      position: relative;
-      padding-left: 50%;
-    }
-  
-    td:before {
-      content: attr(data-label);
-      position: absolute;
-      left: 10px;
-      font-weight: bold;
-    }
+.transaction-table-container {
 
   }
   
-  @layer base {
-    * {
-      @apply border-border;
-    }
-    body {
-      @apply bg-background text-foreground;
-    }
-  }

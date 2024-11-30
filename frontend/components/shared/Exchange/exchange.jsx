@@ -11,53 +11,53 @@ const SearchFilter = ({ filter, setFilter }) => {
       }));
     };
   
-    return (
-    //   <div className="w-[95%] m-auto mt-5 mb-5 border-2 border-[red]">
-    //     <div>
-    //       <input
-    //         type="text"
-    //         id="receiver"
-    //         name="receiver"
-    //         value={filter.receiver}
-    //         onChange={handleInputChange}
-    //         placeholder="Search by Receiver, senders or anything"
-    //         className="rounded-md border-gray-300 px-4 py-2 w-[93%] border-2 border-[red]"
-    //       />
-    //     </div>
+//     return (
+//     //   <div className="w-[95%] m-auto mt-5 mb-5 border-2 border-[red]">
+//     //     <div>
+//     //       <input
+//     //         type="text"
+//     //         id="receiver"
+//     //         name="receiver"
+//     //         value={filter.receiver}
+//     //         onChange={handleInputChange}
+//     //         placeholder="Search by Receiver, senders or anything"
+//     //         className="rounded-md border-gray-300 px-4 py-2 w-[93%] border-2 border-[red]"
+//     //       />
+//     //     </div>
 
-    //   </div>
+//     //   </div>
 
-    <div className="w-[95%] m-auto mt-5 mb-5 flex items-center bg-[white] rounded-md px-2">
-  {/* Search Input */}
-  <input
-    type="text"
-    id="receiver"
-    name="receiver"
-    value={filter.receiver}
-    onChange={handleInputChange}
-    placeholder="Search by Receiver, Sender, or Wallet Address"
-    className="flex-grow rounded-md border-none px-4 py-2 focus:outline-none"
-  />
+//     <div className="w-[95%] m-auto mt-5 mb-5 flex items-center bg-[white] border-2 border-[red] rounded-md px-2">
+//   {/* Search Input */}
+//   <input
+//     type="text"
+//     id="receiver"
+//     name="receiver"
+//     value={filter.receiver}
+//     onChange={handleInputChange}
+//     placeholder="Search by Receiver, Sender, or Wallet Address"
+//     className="rounded-md border-2 border-[red] px-4 py-2 focus:outline-none"
+//   />
 
-  {/* Search Icon */}
-  <button
-    onClick={() => {
-      // Logic is handled by `filter.receiver` in the parent component
-      console.log("Search triggered:", filter.receiver);
-    }}
-    className="ml-2  focus:outline-none"
-  >
+//   {/* Search Icon */}
+//   <button
+//     onClick={() => {
+//       // Logic is handled by `filter.receiver` in the parent component
+//       console.log("Search triggered:", filter.receiver);
+//     }}
+//     className="ml-2  focus:outline-none"
+//   >
 
 
-    <img
-        src="/icons/search-normal.svg"
-      className="h-6 w-6"
-    />
+//     <img
+//         src="/icons/search-normal.svg"
+//       className="h-6 w-6"
+//     />
 
-  </button>
-</div>
+//   </button>
+// </div>
 
-    );
+//     );
   };
 const P2pExchange = () => {
   const [filter, setFilter] = useState({
@@ -91,49 +91,77 @@ const P2pExchange = () => {
   return (
 
     <>
+<div className="mt-10 flex items-center justify-between w-[95%] mx-auto w-[90%]">
+  {/* Left Section */}
+  <div>
+    <h2 className="font-extrabold text-[18px] text-gray-800">P2P Exchange</h2>
+    <p className="text-gray-600">
+      Send & Receive, International Transfers, or Cross-Currency Exchange
+    </p>
+  </div>
 
-        <div className="mt-10 flex justify-between w-[95%] m-auto">
-            
-            <div>
-                <h2 className="font-extrabold text-[18px] text-[black] justify-left w-[fit-content]">P2P Exchange</h2>
-                <p>Send & Receive, International Transfers, or Cross-Currency Exchange</p>
-            </div>
+  {/* Right Section */}
+  <div>
+    <button className="bg-white px-6 py-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out">
+      <p className="text-[#0057DB] font-semibold text-sm">Send SUI Coin</p>
+    </button>
+  </div>
+</div>
 
-            <div>
-                <button className="rounded-[8px] bg-[white] px-10 py-3 shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
-                    <p className="text-[#0057DB] font-semibold text-[14px]">Send SUI coin</p>
-                </button>
-            </div>
-
-        </div>
 
 
 
       {/* Search Filter */}
       <SearchFilter filter={filter} setFilter={setFilter} />
 
-         <div className="grid grid-cols-[1fr,1fr] transaction-table-container w-[95%] rounded-2xl">
-             <p>Receiver</p>
-             <p>Wallet Address</p>
-             <p></p>
-         </div>       
-         {filteredExchangeTransactions.length > 0 ? (
-            filteredExchangeTransactions.map((txn, index) => (
-         <div>
-             <div key={index} className="grid grid-cols-[1fr,1fr,1fr] table-details w-[95%]">
-             <p>{txn.receiver}</p>
-             <p>{txn.walletaddress}</p>
-             <button className="bg-[#0057DB] text-[white] px-2 py-1 w-[80%] rounded-[8px] m-2">
-                    Send
-            </button>
-            </div>
-         </div>
-          ))
-        ) : (
-          <tr>
-            <h1 colSpan="4">No Exchange History found</h1>
+      <div className="w-[95%] rounded-2xl overflow-hidden">
+  <table className="table-auto w-full text-left border-collapse border border-gray-200">
+    {/* Table Header */}
+    <thead className="bg-gray-100">
+      <tr>
+        <th className="px-4 py-2 border border-gray-200">Receiver</th>
+        <th className="px-4 py-2 border border-gray-200">Wallet Address</th>
+        <th className="px-4 py-2 border border-gray-200"></th>
+      </tr>
+    </thead>
+
+    {/* Table Body */}
+    <tbody>
+      {filteredExchangeTransactions.length > 0 ? (
+        filteredExchangeTransactions.map((txn, index) => (
+          <tr
+            key={index}
+            className={`${
+              index % 2 === 0 ? "bg-white" : "bg-gray-50"
+            } hover:bg-gray-100`}
+          >
+            <td className="px-4 py-2 border border-gray-200">{txn.receiver}</td>
+            <td className="px-4 py-2 border border-gray-200">{txn.walletaddress}</td>
+            <td className="border border-gray-200 text-center">
+              {/* <button className="bg-[red] text-white px-4 py-2 rounded-lg">
+                Send
+              </button> */}
+
+              <button className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2">
+                Send
+              </button>
+
+            </td>
           </tr>
-        )}
+        ))
+      ) : (
+        <tr>
+          <td
+            colSpan="3"
+            className="text-center px-4 py-2 border border-gray-200"
+          >
+            No Exchange Transactions found
+          </td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
         
     </>
 

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import './TransactionTable.css'
 
 const TransactionHistory = () => {
   const [filter, setFilter] = useState({
@@ -136,31 +137,48 @@ const TransactionHistory = () => {
         </div>
       )}
 
-      <div className='grid grid-cols-[1fr,1fr,1fr,1fr] transaction-table-container w-[95%] rounded-2xl'>
-        <p>Date</p>
-        <p>Sender</p>
-        <p>Amount</p>
-        <p>Status</p>
-      </div>
+<div className="w-[95%] rounded-2xl overflow-hidden">
+  <table className="table-auto w-full text-left border-collapse border border-gray-200">
+    {/* Table Header */}
+    <thead className="bg-gray-100">
+      <tr>
+        <th className="px-4 py-2 border border-gray-200">Date</th>
+        <th className="px-4 py-2 border border-gray-200">Sender</th>
+        <th className="px-4 py-2 border border-gray-200">Amount</th>
+        <th className="px-4 py-2 border border-gray-200">Status</th>
+      </tr>
+    </thead>
+
+    {/* Table Body */}
+    <tbody>
       {filteredTransactions.length > 0 ? (
         filteredTransactions.map((txn, index) => (
-          <div>
-            <div
-              key={index}
-              className='grid grid-cols-[1fr,1fr,1fr,1fr] table-details'
-            >
-              <p>{txn.date}</p>
-              <p>{txn.sender}</p>
-              <p>{txn.amount}</p>
-              <p>{txn.status}</p>
-            </div>
-          </div>
+          <tr
+            key={index}
+            className={`${
+              index % 2 === 0 ? "bg-white" : "bg-gray-50"
+            } hover:bg-gray-100`}
+          >
+            <td className="px-4 py-2 border border-gray-200">{txn.date}</td>
+            <td className="px-4 py-2 border border-gray-200">{txn.sender}</td>
+            <td className="px-4 py-2 border border-gray-200">{txn.amount}</td>
+            <td className="px-4 py-2 border border-gray-200">{txn.status}</td>
+          </tr>
         ))
       ) : (
         <tr>
-          <h1 colSpan='4'>No Transaction History found</h1>
+          <td
+            colSpan="4"
+            className="text-center px-4 py-2 border border-gray-200"
+          >
+            No Transaction History found
+          </td>
         </tr>
       )}
+    </tbody>
+  </table>
+</div>
+
     </div>
   );
 };

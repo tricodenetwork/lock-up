@@ -103,33 +103,50 @@ const InvestmentHistory = () => {
                 </div>
             )}
 
-        <div className="grid grid-cols-[1fr,1fr,1fr,1fr,1fr] transaction-table-container w-[95%] rounded-2xl">
+<div className="w-[95%] rounded-2xl overflow-hidden">
+  <table className="table-auto w-full text-left border-collapse border border-gray-200">
+    {/* Table Header */}
+    <thead className="bg-gray-100">
+      <tr>
+        <th className="px-4 py-2 border border-gray-200">Date</th>
+        <th className="px-4 py-2 border border-gray-200">Amount Locked</th>
+        <th className="px-4 py-2 border border-gray-200">Interest Rate</th>
+        <th className="px-4 py-2 border border-gray-200">Duration</th>
+        <th className="px-4 py-2 border border-gray-200">Status</th>
+      </tr>
+    </thead>
 
-             
-            <p>Date</p>
-            <p>Amount Locked</p>
-            <p>Interest Rate</p>
-            <p>Duration</p>
-            <p>Status</p>
-
-         </div>       
-         {filteredTransactions.length > 0 ? (
-            filteredTransactions.map((txn, index) => (
-         <div>
-              <div key={index} className="grid grid-cols-[1fr,1fr,1fr,1fr,1fr]  table-details">
-                <p>{txn.date}</p>
-                <p>{txn.amountlocked}</p>
-                <p>{txn.interestrate}</p>
-                <p>{txn.duration}</p>
-                <p>{txn.status}</p>
-              </div>
-         </div>
-          ))
-        ) : (
-          <tr>
-            <h1 colSpan="4">No Investment History found</h1>
+    {/* Table Body */}
+    <tbody>
+      {filteredTransactions.length > 0 ? (
+        filteredTransactions.map((txn, index) => (
+          <tr
+            key={index}
+            className={`${
+              index % 2 === 0 ? "bg-white" : "bg-gray-50"
+            } hover:bg-gray-100`}
+          >
+            <td className="px-4 py-2 border border-gray-200">{txn.date}</td>
+            <td className="px-4 py-2 border border-gray-200">{txn.amountlocked}</td>
+            <td className="px-4 py-2 border border-gray-200">{txn.interestrate}</td>
+            <td className="px-4 py-2 border border-gray-200">{txn.duration}</td>
+            <td className="px-4 py-2 border border-gray-200">{txn.status}</td>
           </tr>
-        )}
+        ))
+      ) : (
+        <tr>
+          <td
+            colSpan="5"
+            className="text-center px-4 py-2 border border-gray-200"
+          >
+            No Investment History found
+          </td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
+
       
     </div>
   );

@@ -43,9 +43,9 @@ const Header = () => {
       </div>
 
       {/* Desktop Navigation */}
-      <div className='hidden md:flex gap-[30px]'>
+      <div className='hidden md:flex gap-[10px]'>
         <div className='flex items-center'>
-          <img src='/icons/home.svg' alt='Product' className='h-full' />
+          <img src='/icons/home.svg' alt='Product' className='h-[full]' />
           <Link href='/'>Dashboard</Link>
         </div>
 
@@ -53,7 +53,7 @@ const Header = () => {
           <img
             src='/icons/fluent_payment-20-regular.svg'
             alt='Product'
-            className='h-full'
+            className='h-[full]'
           />
           <Link href='#'>P2P Marketplace</Link>
         </div>
@@ -62,7 +62,7 @@ const Header = () => {
           <img
             src='/icons/fluent_payment-20-regular.svg'
             alt='Product'
-            className='h-full'
+            className='h-[full]'
           />
           <Link href='exchange'>P2P Exchange</Link>
         </div>
@@ -71,7 +71,7 @@ const Header = () => {
           <img
             src='/icons/streamline_investment-selection.svg'
             alt='Product'
-            className='h-full'
+            className='h-[full]'
           />
           <Link href='#'>Assets</Link>
         </div>
@@ -80,7 +80,7 @@ const Header = () => {
           <img
             src='/icons/streamline_investment-selection.svg'
             alt='Product'
-            className='h-full'
+            className='h-[full]'
           />
           <Link href='#'>Investments</Link>
         </div>
@@ -232,6 +232,7 @@ const Header = () => {
           </div>
         )}
       </div>
+
     </div>
   );
 };
