@@ -1,5 +1,46 @@
 "use client";
+import { useEffect } from "react";
+
 const ClientOverview = () => {
+  useEffect(() => {
+    console.log("mounted");
+
+    const mounted = async () => {
+      try {
+        const res = await fetch("/api/mounted", { method: "POST" });
+        const ans = await res.json();
+        console.log(ans);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    const unmounted = () => {
+      try {
+        navigator.sendBeacon("/api/unmounted");
+        console.log("User status set to offline");
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    // Set user online when the component mounts
+    mounted();
+
+    // Add an event listener for the page unload event
+    const handleBeforeUnload = () => {
+      unmounted();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Cleanup on component unmount
+    return () => {
+      console.log("unmounted");
+      unmounted(); // Also handle unmounting within React lifecycle
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
   return (
     <>
       <div>

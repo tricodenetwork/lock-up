@@ -28,6 +28,7 @@
     "lucide-react": "^0.379.0",
     "next": "14.2.3",
     "next-themes": "^0.3.0",
+    "node-telegram-bot-api": "^0.66.0",
     "react": "^18",
     "react-dom": "^18",
     "react-spinners": "^0.13.8",
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/node-telegram-bot-api": "^0.64.7",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
