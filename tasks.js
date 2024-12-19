@@ -87,7 +87,7 @@ const componentsToBeDeveloped = [
       "Take note of the three sections. Logo, menulist, and right menu.",
       "Please try and develope for mobile screen as well to improve responsiveness.",
     ],
-    AsignedTo: "",
+    AsignedTo: "Ovodo",
   },
   {
     name: "StatsCard.",
