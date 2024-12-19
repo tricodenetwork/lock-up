@@ -9,7 +9,7 @@ const componentsToBeDeveloped = [
       "Also dont forget that this component would be a parent wrapper to children props being passed",
       "This is use to wrap around almost all the other components.",
     ],
-    AsignedTo: "",
+    AsignedTo: "Ovodo",
   },
   {
     name: "TransactionNotification",

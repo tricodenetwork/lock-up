@@ -4,17 +4,17 @@ import "./globals.css";
 import "@mysten/dapp-kit/dist/index.css";
 import Header from "@/components/shared/header/Header";
 
-import {Nunito} from "next/font/google"
+import { Nunito } from "next/font/google";
 
 export const metadata: Metadata = {
-  title: "Enoki Example App",
-  description: "Learn how to build a dApp with Enoki",
+  title: "LockUp",
+  description: "A Decentralized P2P platforrm on the sui network",
 };
 
-const nunito = Nunito({weight:["200","300","400","500","600","700","800","900"],subsets:["cyrillic","cyrillic-ext"]})
-
-
-
+const nunito = Nunito({
+  weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
+  subsets: ["cyrillic", "cyrillic-ext"],
+});
 
 export default function RootLayout({
   children,
