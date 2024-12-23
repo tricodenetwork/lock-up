@@ -69,8 +69,8 @@
     background-color: #F0F6FF;
   }
 
-  .header {
-    border-bottom: 2px solid #C4C4C4
+  .bord {
+    border: 2px solid #C4C4C4
 }
 
 /* Default styles (desktop) */

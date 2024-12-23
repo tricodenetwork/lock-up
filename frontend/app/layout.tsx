@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${nunito.className} antialiased bg-background`}>
+      <body className={`${nunito.className} antialiased h-full bg-background`}>
         <ProvidersAndLayout>
           <Header />
           {children}

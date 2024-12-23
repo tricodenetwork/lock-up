@@ -10,6 +10,7 @@ const componentsToBeDeveloped = [
       "This is use to wrap around almost all the other components.",
     ],
     AsignedTo: "Ovodo",
+    Completed: true,
   },
   {
     name: "TransactionNotification",
@@ -22,7 +23,7 @@ const componentsToBeDeveloped = [
       "Make the section bold in the description as it is in the UI.",
       "Take into consideration the stroke, border radius and drop shadow in the component",
     ],
-    AsignedTo: "",
+    AsignedTo: "Ovodo",
   },
   {
     name: "SelectComponent",

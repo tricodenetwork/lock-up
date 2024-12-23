@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import ProfilePopover from "@/components/ProfilePopover";
+import Image from "next/image";
+import { navItems } from "@/lib/utils";
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -34,56 +36,29 @@ const Header = () => {
   };
 
   return (
-    <div className='header flex justify-between items-center h-[88px] m-auto px-4'>
+    <div className='flex justify-between items-center h-[88px] w-full px-12 border-b border-[#DCDCDC]'>
       {/* Logo Section */}
       <div className='flex items-center'>
-        <a href='/'>
-          <img src='logo/logo.svg' />
-        </a>
+        <Link href='/'>
+          <div className='relative w-[125px] h-[21.54px]'>
+            <Image src={"/icons/logo.svg"} fill alt='logo' />
+          </div>
+        </Link>
       </div>
 
       {/* Desktop Navigation */}
-      <div className='hidden md:flex gap-[10px]'>
-        <div className='flex items-center'>
-          <img src='/icons/home.svg' alt='Product' className='h-[full]' />
-          <Link href='/'>Dashboard</Link>
-        </div>
-
-        <div className='flex items-center'>
-          <img
-            src='/icons/fluent_payment-20-regular.svg'
-            alt='Product'
-            className='h-[full]'
-          />
-          <Link href='#'>P2P Marketplace</Link>
-        </div>
-
-        <div className='flex items-center'>
-          <img
-            src='/icons/fluent_payment-20-regular.svg'
-            alt='Product'
-            className='h-[full]'
-          />
-          <Link href='exchange'>P2P Exchange</Link>
-        </div>
-
-        <div className='flex items-center'>
-          <img
-            src='/icons/streamline_investment-selection.svg'
-            alt='Product'
-            className='h-[full]'
-          />
-          <Link href='#'>Assets</Link>
-        </div>
-
-        <div className='flex items-center'>
-          <img
-            src='/icons/streamline_investment-selection.svg'
-            alt='Product'
-            className='h-[full]'
-          />
-          <Link href='#'>Investments</Link>
-        </div>
+      <div className='hidden md:flex gap-[39px]'>
+        {navItems.map(({ href, iconSrc, alt, label }, index) => (
+          <div
+            key={index}
+            className='flex gap-2 hover:-translate-y-1 duration-150 border-appBlack  items-center'
+          >
+            <div className='relative w-[24px] h-[24px]'>
+              <Image src={iconSrc} fill alt={alt} />
+            </div>
+            <Link href={href}>{label}</Link>
+          </div>
+        ))}
       </div>
 
       {/* Mobile Hamburger Menu */}
@@ -113,126 +88,87 @@ const Header = () => {
 
       {isNavOpen && (
         <div className='absolute top-[88px] left-0 w-full bg-white shadow-md md:hidden'>
-          <div className='flex flex-col gap-4 p-4'>
-            <div className='flex items-center'>
-              <img src='/icons/home.svg' alt='Product' className='h-6' />
-              <Link href='index'>Dashboard</Link>
-            </div>
-            <div className='flex items-center'>
-              <img
-                src='/icons/fluent_payment-20-regular.svg'
-                alt='Product'
-                className='h-6'
-              />
-              <Link href='#'>P2P Marketplace</Link>
-            </div>
-
-            <div className='flex items-center'>
-              <img
-                src='/icons/fluent_payment-20-regular.svg'
-                alt='Product'
-                className='h-6'
-              />
-              <Link href='#'>P2P </Link>
-            </div>
-
-            <div className='flex items-center'>
-              <img
-                src='/icons/streamline_investment-selection.svg'
-                alt='Product'
-                className='h-6'
-              />
-              <Link href='#'>Assets</Link>
-            </div>
-            <div className='flex items-center'>
-              <img
-                src='/icons/streamline_investment-selection.svg'
-                alt='Product'
-                className='h-6'
-              />
-              <Link href='#'>Investments</Link>
-            </div>
+          <div className='flex-col flex gap-4 p-4'>
+            {navItems.map(({ href, iconSrc, alt, label }, index) => (
+              <div
+                key={index}
+                className='flex gap-2 hover:-translate-y-1 duration-150 border-appBlack  items-center'
+              >
+                <div className='relative w-[24px] h-[24px]'>
+                  <Image src={iconSrc} fill alt={alt} />
+                </div>
+                <Link href={href}>{label}</Link>
+              </div>
+            ))}
           </div>
         </div>
       )}
 
       {/* Search, Notifications, and Profile */}
 
-      <div className='hidden md:flex items-center gap-6'>
-        <div className='relative w-[290px] max-w-sm'>
-          <input
-            type='text'
-            placeholder='Search...'
-            className='w-full px-4 py-2 text-sm border border-gray-300 rounded-1xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+      <div className='hidden md:flex items-center gap-4'>
+        <div className='bg-[#DCE0E5] w-10 cursor-pointer hover:scale-110 duration-100 h-10 rounded-[12px] flex items-center justify-center'>
+          <Image
+            src={"/icons/search.svg"}
+            width={20}
+            height={20}
+            alt='search'
           />
-          <button className='absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-500'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth={2}
-              stroke='currentColor'
-              className='w-5 h-5'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M21 21l-4.35-4.35M9.5 17A7.5 7.5 0 1 1 17 9.5 7.5 7.5 0 0 1 9.5 17z'
-              />
-            </svg>
-          </button>
         </div>
-        <div className='relative cursor-pointer bg-white rounded-full drop-shadow-lg p-2'>
-          <img
-            src='/icons/notification.svg'
-            alt='Notifications'
-            className='h-full'
+        <div className='bg-[#DCE0E5] w-10 cursor-pointer hover:scale-110 duration-100 h-10 rounded-[12px] flex items-center justify-center'>
+          <Image
+            src={"/icons/notification.svg"}
+            width={20}
+            height={20}
+            alt='notification'
           />
-          <span className='absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-500 rounded-full'>
-            5
-          </span>
         </div>
-        <ProfilePopover />
-
-        {/* Dropdown Menu */}
-        {isDropdownOpen && (
-          <div className='absolute right-0 z-10 w-64 p-4 mt-[18rem] bg-white border rounded-lg shadow-lg'>
-            <h4 className='mb-2 text-sm font-bold text-gray-700'>
-              Edit Profile
-            </h4>
-            <div className='space-y-2'>
-              {/* Full Name */}
-              <input
-                type='text'
-                name='fullName'
-                value={profileData.fullName}
-                onChange={handleInputChange}
-                placeholder='Full Name'
-                className='w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-              />
-              {/* Phone Number */}
-              <input
-                type='text'
-                name='phoneNumber'
-                value={profileData.phoneNumber}
-                onChange={handleInputChange}
-                placeholder='Phone Number'
-                className='w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-              />
-              {/* Email */}
-              <input
-                type='email'
-                name='email'
-                value={profileData.email}
-                onChange={handleInputChange}
-                placeholder='Email Address'
-                className='w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-              />
-            </div>
-          </div>
-        )}
+        <div className='bg-[#1b1b1b] w-10 cursor-pointer hover:scale-110 duration-100 h-10 rounded-[12px] flex items-center justify-center'>
+          <Image
+            src={"/icons/connect.svg"}
+            width={20}
+            height={20}
+            alt='connect'
+          />
+        </div>
       </div>
+      {/* <ProfilePopover /> */}
 
+      {/* Dropdown Menu */}
+      {isDropdownOpen && (
+        <div className='absolute right-0 z-10 w-64 p-4 mt-[18rem] bg-white border rounded-lg shadow-lg'>
+          <h4 className='mb-2 text-sm font-bold text-gray-700'>Edit Profile</h4>
+          <div className='space-y-2'>
+            {/* Full Name */}
+            <input
+              type='text'
+              name='fullName'
+              value={profileData.fullName}
+              onChange={handleInputChange}
+              placeholder='Full Name'
+              className='w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+            />
+            {/* Phone Number */}
+            <input
+              type='text'
+              name='phoneNumber'
+              value={profileData.phoneNumber}
+              onChange={handleInputChange}
+              placeholder='Phone Number'
+              className='w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+            />
+            {/* Email */}
+            <input
+              type='email'
+              name='email'
+              value={profileData.email}
+              onChange={handleInputChange}
+              placeholder='Email Address'
+              className='w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

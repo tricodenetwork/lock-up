@@ -24,6 +24,7 @@ const config = {
         appBlack: "#1B1B1B",
         appYellow: "#FFDD00",
         main_bg: "#F0F6FF",
+        header_black: "#212529",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -7,7 +7,7 @@ const WhiteBackground = ({
   children: React.ReactNode;
   styles: string;
 }) => {
-  return <div className={`${styles} bg-white`}>{children}</div>;
+  return <div className={` ${styles} bg-white`}>{children}</div>;
 };
 
-export default WhiteBackground;
+export default React.memo(WhiteBackground);
