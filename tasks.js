@@ -56,7 +56,7 @@ const componentsToBeDeveloped = [
       "Also take in a title as prop and also href or onclick.",
       "Take cue from the button component in the tricode repo for ideas.",
     ],
-    AsignedTo: "",
+    AsignedTo: "Ada",
   },
   {
     name: "ModalComponent",
@@ -105,6 +105,6 @@ const componentsToBeDeveloped = [
     name: "Footer.",
     identifier: "Bottom section on the landing page",
     todo: ["Create a reusable Footer component."],
-    AsignedTo: "",
+    AsignedTo: "Ada",
   },
 ];
