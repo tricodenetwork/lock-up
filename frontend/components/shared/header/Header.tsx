@@ -4,11 +4,12 @@ import Link from "next/link";
 import ProfilePopover from "@/components/ProfilePopover";
 import Image from "next/image";
 import { navItems } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false); // State for Hamburger Menu
-
+  const path = usePathname();
   // Placeholder state for editable profile fields
   const [profileData, setProfileData] = useState({
     fullName: "John Doe",
@@ -36,7 +37,11 @@ const Header = () => {
   };
 
   return (
-    <div className='flex justify-between items-center h-[88px] w-full px-12 border-b border-[#DCDCDC]'>
+    <div
+      className={`${
+        path == "/" ? "hidden" : "flex"
+      } justify-between items-center h-[88px] w-full px-12 border-b border-[#DCDCDC]`}
+    >
       {/* Logo Section */}
       <div className='flex items-center'>
         <Link href='/'>

@@ -21,7 +21,7 @@ const AppButton = ({
         className={`${style} ${
           !style?.includes("bg-") &&
           "bg-primary hover:bg-white hover:text-primary"
-        } duration-150 hover:border-primary hover:border border rounded-[8px] flex items-center justify-center w-[58px] h-[23px] p-4 text-white text-sm`}
+        } duration-150  hover:border-primary hover:border border rounded-[8px] flex items-center justify-center w-[58px] h-[23px] p-4 text-white text-sm`}
       >
         {title}
       </Link>
