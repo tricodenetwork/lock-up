@@ -1,63 +1,108 @@
-import React from 'react';
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  
-  return (
-    <footer className="bg-black text-white p-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Main footer content */}
-        <div className="flex justify-between items-center pb-4">
-          {/* Logo */}
-          <div className="flex items-center">
-            <img 
-              src="/logo/logo.svg"
-              alt="LockUP Logo" 
-              className="h-6"
-            />
-          </div>
 
-          {/* Center Links */}
-          <div className="flex space-x-6">
-            <a href="#" className="text-gray-400 hover:text-white text-sm">
-              Help/Support
+  return (
+    <footer className='w-full bg-[#1B1B1B] py-8  text-[#FFFFFF]'>
+      <div className='px-4 sm:px-8 lg:px-12'>
+        {/* Top section with logo and navigation */}
+        <div className='flex flex-row justify-between items-center'>
+          {/* Logo */}
+          <Link
+            href={"/"}
+            className=' w-[80px] h-[22px] sm:w-[123px] sm:h-[22.08px] relative'
+          >
+            <Image src='/icons/logo_white.svg' alt='LockUP' fill className='' />
+          </Link>
+
+          {/* Navigation Links */}
+          <div className='flex items-center space-x-4 lg:space-x-8'>
+            <a
+              href='/help'
+              className='text-[#FFFFFF] hover:text-gray-300 text-sm font-semibold'
+            >
+              Help
             </a>
-            <a href="#" className="text-gray-400 hover:text-white text-sm">
+            <a
+              href='/contact'
+              className='text-[#FFFFFF] hover:text-gray-300 text-sm font-semibold'
+            >
               Contact Us
             </a>
-            <a href="#" className="text-gray-400 hover:text-white text-sm">
+            <a
+              href='/privacy'
+              className='text-[#FFFFFF] hover:text-gray-300 text-sm font-semibold'
+            >
               Privacy Policy
             </a>
           </div>
         </div>
+      </div>
 
-        {/* Horizontal Divider */}
-        <hr className="border-t-4 border-gray-800" />
+      {/* Full-width horizontal line */}
+      <hr className='border-t-2 border-[#FFFFFF]   my-8 border-opacity-90 w-full m-0' />
 
-        {/* Bottom section with copyright and social icons */}
-        <div className="flex justify-between items-center pt-4">
-          {/* Copyright */}
-          <div className="text-gray-400 text-sm">
+      {/* Bottom section */}
+      <div className=' px-4 sm:px-8 lg:px-12'>
+        <div className='flex flex-row justify-between items-center'>
+          {/* Copyright text */}
+          <div className='text-[#FFFFFF] text-xs sm:text-sm '>
             © {currentYear} LockUp. All rights reserved.
           </div>
 
-          {/* Social Media Icons */}
-          <div className="flex space-x-4">
-            <a href="#" className="text-gray-400 hover:text-white">
-              <img src="/icons/youtube.svg" alt="YouTube Icon" className="h-5 w-5" />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <img src="/icons/facebook.svg" alt="Facebook Icon" className="h-5 w-5" />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <img src="/icons/twitter.svg" alt="Twitter Icon" className="h-5 w-5" />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <img src="/icons/instagram.svg" alt="Instagram Icon" className="h-5 w-5" />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <img src="/icons/linkedin.svg" alt="LinkedIn Icon" className="h-5 w-5" />
-            </a>
+          {/* Social Media Links */}
+          <div className='flex space-x-3 sm:space-x-4 lg:space-x-6'>
+            <Link
+              href='/send-money'
+              className='text-[#FFFFFF] hover:text-gray-300'
+            >
+              <Image
+                src='/icons/youtube.svg'
+                alt='YouTube'
+                className='w-5 h-5'
+                width={24}
+                height={24}
+              />
+            </Link>
+            <Link href='#' className='text-[#FFFFFF] hover:text-gray-300'>
+              <Image
+                src='/icons/facebook.svg'
+                alt='Facebook'
+                className='w-5 h-5'
+                width={24}
+                height={24}
+              />
+            </Link>
+            <Link href='#' className='text-[#FFFFFF] hover:text-gray-300'>
+              <Image
+                src='/icons/twitter.svg'
+                alt='Twitter'
+                className='w-5 h-5'
+                width={24}
+                height={24}
+              />
+            </Link>
+            <Link href='#' className='text-[#FFFFFF] hover:text-gray-300'>
+              <Image
+                src='/icons/instagram.svg'
+                alt='Instagram'
+                className='w-5 h-5'
+                width={24}
+                height={24}
+              />
+            </Link>
+            <Link href='#' className='text-[#FFFFFF] hover:text-gray-300'>
+              <Image
+                src='/icons/linkedin.svg'
+                alt='LinkedIn'
+                className='w-5 h-5'
+                width={24}
+                height={24}
+              />
+            </Link>
           </div>
         </div>
       </div>

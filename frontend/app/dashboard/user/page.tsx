@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { Lexend } from "next/font/google";
 import TransactionNotification from "@/components/TransactionNotification";
+import SendMoneyComponent from "@/components/SendMoneyComponent";
 const lexend = Lexend({ subsets: ["latin", "latin-ext", "vietnamese"] });
 
 const boxDetails = [
@@ -54,9 +55,9 @@ const Page = () => {
   return (
     <div className='flex flex-col relative flex-1 justify-around'>
       <div className='absolute w-screen flex justify-center top-10 self-center'>
-        <TransactionNotification />
+        <SendMoneyComponent />
       </div>
-      <section className='flex flex-col gap-[36px]  items-center '>
+      {/* <section className='flex flex-col gap-[36px]  items-center '>
         <div className='mx-auto max-w-[581px]'>
           <h3 className='font-semibold text-[42px] text-center leading-tight  text-[#212529]'>
             The fast and trusted way to send money online
@@ -91,7 +92,7 @@ const Page = () => {
             </WhiteBackground>
           );
         })}
-      </section>
+      </section> */}
     </div>
   );
 };

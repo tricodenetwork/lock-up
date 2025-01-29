@@ -5,6 +5,7 @@ import "@mysten/dapp-kit/dist/index.css";
 import Header from "@/components/shared/header/Header";
 
 import { Nunito } from "next/font/google";
+import Footer from "@/components/shared/footer/Footer";
 
 export const metadata: Metadata = {
   title: "LockUp",
@@ -27,6 +28,7 @@ export default function RootLayout({
         <ProvidersAndLayout>
           <Header />
           {children}
+          <Footer />
         </ProvidersAndLayout>
       </body>
     </html>

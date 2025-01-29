@@ -39,7 +39,7 @@ const Header = () => {
   return (
     <div
       className={`${
-        path == "/" ? "hidden" : "flex"
+        path == "/" || path.includes("auth") ? "hidden" : "flex"
       } justify-between items-center h-[88px] w-full px-12 border-b border-[#DCDCDC]`}
     >
       {/* Logo Section */}

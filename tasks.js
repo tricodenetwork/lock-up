@@ -45,7 +45,7 @@ const componentsToBeDeveloped = [
       "Take note, it contains three SelectComponents, a receive/send amount, a yellow continue button, and a currency converter/ show fees at the top.",
       "I would suggest the talent that takes on the selectComponent also takes this to make it more seamless.",
     ],
-    AsignedTo: "",
+    AsignedTo: "Ada",
   },
   {
     name: "Button",
@@ -56,7 +56,7 @@ const componentsToBeDeveloped = [
       "Also take in a title as prop and also href or onclick.",
       "Take cue from the button component in the tricode repo for ideas.",
     ],
-    AsignedTo: "Ada",
+    AsignedTo: "Ovodo",
   },
   {
     name: "ModalComponent",
@@ -99,7 +99,7 @@ const componentsToBeDeveloped = [
       "Please try and develope for mobile screen as well to improve responsiveness.",
       "Take note this should be wrapped in a WhiteBackground Component",
     ],
-    AsignedTo: "",
+    AsignedTo: "This has been done",
   },
   {
     name: "Footer.",
