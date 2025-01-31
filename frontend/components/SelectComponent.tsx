@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface SelectComponentProps {
   label?: string;
@@ -8,26 +8,28 @@ interface SelectComponentProps {
   placeholder?: string;
 }
 
-const SelectComponent: React.FC<SelectComponentProps> = ({ 
-  label, 
-  value, 
-  options = [], 
-  onChange, 
-  placeholder = "Select option" 
+const SelectComponent: React.FC<SelectComponentProps> = ({
+  label,
+  value,
+  options = [],
+  onChange,
+  placeholder = "Select option",
 }) => {
   return (
-    <div className="mb-6">
+    <div className='mb-6'>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className='block text-sm font-medium text-header_black mb-[10px]'>
           {label}
         </label>
       )}
       <select
         value={value}
         onChange={onChange}
-        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className='w-full p-3 text-sm bg-[#FAFAFA] border border-gray-[#EBECE6] rounded-md text-header_black font-light focus:outline-none focus:ring-2 focus:ring-blue-500'
       >
-        <option value="">{placeholder}</option>
+        <option className='text-header_black font-light' value=''>
+          {placeholder}
+        </option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

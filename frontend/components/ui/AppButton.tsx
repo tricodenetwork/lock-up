@@ -7,21 +7,22 @@ const AppButton = ({
   title,
   style,
   action,
+  disabled,
 }: {
   dark?: boolean;
   href?: string;
   title: string;
   style?: string;
   action?: any;
+  disabled?: boolean;
 }) => {
   if (href) {
     return (
       <Link
         href={href}
         className={`${style} ${
-          !style?.includes("bg-") &&
-          "bg-primary hover:bg-white hover:text-primary"
-        } duration-150  hover:border-primary hover:border border rounded-[8px] flex items-center justify-center  h-[53px] p-4 text-white text-sm`}
+          !style?.includes("bg-") && "bg-appBlue hover:bg-suiBlue hover:text"
+        } duration-150  hover:border-suiBlue hover:border border rounded-[8px] flex items-center justify-center  h-[53px] p-4 text-white text-sm`}
       >
         {title}
       </Link>
@@ -30,11 +31,11 @@ const AppButton = ({
   if (action) {
     return (
       <button
+        disabled={disabled}
         onClick={action}
         className={`${style} ${
-          !style?.includes("bg-") &&
-          "bg-primary hover:bg-white hover:text-primary"
-        } duration-150 hover:border-primary hover:border border rounded-[8px] flex items-center justify-center  h-[53px] p-4 text-white text-sm`}
+          !style?.includes("bg-") && "bg-appBlue hover:bg-suiBlue hover:text"
+        } duration-150 hover:border-suiBlue hover:border border rounded-[8px] flex items-center justify-center  h-[53px] p-4 text-white text-sm`}
       >
         {title}
       </button>

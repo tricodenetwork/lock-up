@@ -25,6 +25,10 @@ const config = {
         appYellow: "#FFDD00",
         main_bg: "#F0F6FF",
         header_black: "#212529",
+        border: "#EBECE6",
+        app_yellow: "#FFDD00",
+        error: "#FF4444",
+        light_ash: "#666666",
       },
       borderRadius: {
         lg: "var(--radius)",

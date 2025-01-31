@@ -5,11 +5,13 @@ import ProfilePopover from "@/components/ProfilePopover";
 import Image from "next/image";
 import { navItems } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import { useFonts } from "@/hooks/useFonts";
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false); // State for Hamburger Menu
   const path = usePathname();
+  const { sand } = useFonts();
   // Placeholder state for editable profile fields
   const [profileData, setProfileData] = useState({
     fullName: "John Doe",
@@ -38,9 +40,10 @@ const Header = () => {
 
   return (
     <div
+      style={sand.style}
       className={`${
         path == "/" || path.includes("auth") ? "hidden" : "flex"
-      } justify-between items-center h-[88px] w-full px-12 border-b border-[#DCDCDC]`}
+      } justify-between items-center h-[10.24svh] w-full px-12 border-b border-[#DCDCDC]`}
     >
       {/* Logo Section */}
       <div className='flex items-center'>
@@ -52,22 +55,21 @@ const Header = () => {
       </div>
 
       {/* Desktop Navigation */}
-      <div className='hidden md:flex gap-[39px]'>
+      <div className='hidden lg:flex gap-[39px]'>
         {navItems.map(({ href, iconSrc, alt, label }, index) => (
-          <div
-            key={index}
-            className='flex gap-2 hover:-translate-y-1 duration-150 border-appBlack  items-center'
-          >
+          <div key={index} className='flex gap-2   items-center'>
             <div className='relative w-[24px] h-[24px]'>
-              <Image src={iconSrc} fill alt={alt} />
+              <Image src={iconSrc} fill className='object-cover' alt={alt} />
             </div>
-            <Link href={href}>{label}</Link>
+            <Link className='hover:font-bold  duration-300' href={href}>
+              {label}
+            </Link>
           </div>
         ))}
       </div>
 
       {/* Mobile Hamburger Menu */}
-      <div className='md:hidden'>
+      <div className='md:hidden '>
         <button
           onClick={toggleNav}
           className='text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500'
@@ -92,7 +94,7 @@ const Header = () => {
       {/* Mobile Navigation Dropdown */}
 
       {isNavOpen && (
-        <div className='absolute top-[88px] left-0 w-full bg-white shadow-md md:hidden'>
+        <div className='absolute z-50 top-[88px] left-0 w-full bg-white shadow-md md:hidden'>
           <div className='flex-col flex gap-4 p-4'>
             {navItems.map(({ href, iconSrc, alt, label }, index) => (
               <div
@@ -128,7 +130,8 @@ const Header = () => {
             alt='notification'
           />
         </div>
-        <div className='bg-[#1b1b1b] w-10 cursor-pointer hover:scale-110 duration-100 h-10 rounded-[12px] flex items-center justify-center'>
+        <div className='bg-[#1b1b1b] relative w-10 cursor-pointer hover:scale-110 duration-100 h-10 rounded-[12px] flex items-center justify-center'>
+          <div className='w-[6px] h-[6px] rounded-full backdrop-blur-sm bg-lime-300 absolute top-[6px] right-[6px] animate-pulse' />
           <Image
             src={"/icons/connect.svg"}
             width={20}

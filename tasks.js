@@ -10,7 +10,7 @@ const componentsToBeDeveloped = [
       "This is use to wrap around almost all the other components.",
     ],
     AsignedTo: "Ovodo",
-    Completed: true,
+    Completed: "Ovodo",
   },
   {
     name: "TransactionNotification",
@@ -24,6 +24,7 @@ const componentsToBeDeveloped = [
       "Take into consideration the stroke, border radius and drop shadow in the component",
     ],
     AsignedTo: "Ovodo",
+    Completed: "Ovodo",
   },
   {
     name: "SelectComponent",
@@ -35,7 +36,8 @@ const componentsToBeDeveloped = [
       "You can take cue from the select component in the tricode repo. This can help you understand the implementation better.",
       "Create an error state to make the border red and also display a little error message at the bottom. You can pass in an error prop to activate this.",
     ],
-    AsignedTo: "",
+    AsignedTo: "Ada",
+    Completed: "Ovodo",
   },
   {
     name: "SendMoneyComponent",
@@ -46,9 +48,10 @@ const componentsToBeDeveloped = [
       "I would suggest the talent that takes on the selectComponent also takes this to make it more seamless.",
     ],
     AsignedTo: "Ada",
+    Completed: "Ovodo",
   },
   {
-    name: "Button",
+    name: "AppButton",
     identifier: "Blue full width and small width buttons all over the UI",
     todo: [
       "Create a reusable Button Component.",
@@ -57,6 +60,7 @@ const componentsToBeDeveloped = [
       "Take cue from the button component in the tricode repo for ideas.",
     ],
     AsignedTo: "Ovodo",
+    Completed: "Ovodo",
   },
   {
     name: "ModalComponent",
@@ -68,6 +72,7 @@ const componentsToBeDeveloped = [
       "Take cue from the button component in the tricode repo for ideas.",
     ],
     AsignedTo: "Akorede",
+    Completed: "Ovodo",
   },
   {
     name: "NotificationItem.",
@@ -89,6 +94,7 @@ const componentsToBeDeveloped = [
       "Please try and develope for mobile screen as well to improve responsiveness.",
     ],
     AsignedTo: "Ovodo",
+    Completed: "Ovodo",
   },
   {
     name: "StatsCard.",
@@ -106,5 +112,6 @@ const componentsToBeDeveloped = [
     identifier: "Bottom section on the landing page",
     todo: ["Create a reusable Footer component."],
     AsignedTo: "Ada",
+    Completed: "Ovodo",
   },
 ];

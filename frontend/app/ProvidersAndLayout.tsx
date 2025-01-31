@@ -2,7 +2,7 @@
 
 import { AuthenticationProvider } from "@/contexts/Authentication";
 import { ChildrenProps } from "@/types/ChildrenProps";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { EnokiFlowProvider } from "@mysten/enoki/react";
 import {
   createNetworkConfig,
@@ -16,6 +16,7 @@ import clientConfig from "@/config/clientConfig";
 import "@mysten/dapp-kit/dist/index.css";
 import CustomWalletProvider from "@/contexts/CustomWallet";
 import { Toaster } from "@/components/ui/sonner";
+import { Toaster as Toast } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
 
 export interface StorageAdapter {
@@ -24,18 +25,6 @@ export interface StorageAdapter {
   removeItem(key: string): Promise<void>;
 }
 
-const sessionStorageAdapter: StorageAdapter = {
-  getItem: async (key) => {
-    return sessionStorage.getItem(key);
-  },
-  setItem: async (key, value) => {
-    sessionStorage.setItem(key, value);
-  },
-  removeItem: async (key) => {
-    sessionStorage.removeItem(key);
-  },
-};
-
 registerStashedWallet("Breaking the Ice - Community Vote", {});
 
 export const ProvidersAndLayout = ({ children }: ChildrenProps) => {
@@ -43,8 +32,25 @@ export const ProvidersAndLayout = ({ children }: ChildrenProps) => {
     testnet: { url: getFullnodeUrl("testnet") },
     mainnet: { url: getFullnodeUrl("mainnet") },
   });
+  const [storage, setStorage] = useState<StorageAdapter | null>(null);
 
   const queryClient = new QueryClient();
+
+  useEffect(() => {
+    const sessionStorageAdapter: StorageAdapter = {
+      getItem: async (key) => {
+        return sessionStorage.getItem(key);
+      },
+      setItem: async (key, value) => {
+        sessionStorage.setItem(key, value);
+      },
+      removeItem: async (key) => {
+        sessionStorage.removeItem(key);
+      },
+    };
+
+    setStorage(sessionStorageAdapter);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -57,14 +63,15 @@ export const ProvidersAndLayout = ({ children }: ChildrenProps) => {
           stashedWallet={{
             name: "Breaking the Ice - Community Vote",
           }}
-          storage={sessionStorageAdapter}
+          storage={storage}
         >
           <EnokiFlowProvider apiKey={clientConfig.ENOKI_API_KEY}>
             <AuthenticationProvider>
               <CustomWalletProvider>
-                <main className='min-h-screen h-screen relative flex flex-col'>
+                <main className='min-h-screen  relative flex flex-col'>
                   {children}
                   <Toaster duration={2000} />
+                  <Toast />
                   <Analytics />
                 </main>
               </CustomWalletProvider>
