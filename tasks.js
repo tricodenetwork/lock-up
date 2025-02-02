@@ -1,3 +1,19 @@
+/**Take Note
+ * - Study the first row in the figma file (Sender Transaction Details). All the pages and components
+ * there have been developed. And a few are reused so you don't waste time redoing them.
+ *
+ * - Current developed routes are:-
+ * `/` - Landing Page
+ * `/dashboard` - Senders dashboard/main page
+ * `/marketplace` - List of available intermediaries
+ * `/notification`- Currently housing the Transaction Overview, Receipts / Proof of payments
+ *
+ * - Go through these thoroughly to uderstand the current progress and challenges.
+ * - Create a new branch with your name and push when done.
+ *
+ * - Looking forward to your works. Thank you.
+ */
+
 const componentsToBeDeveloped = [
   {
     name: "WhiteBackGround",
@@ -83,7 +99,7 @@ const componentsToBeDeveloped = [
       "Take note of the bottom border",
       "This should have a transparent background as it is in a WhiteBackground Component.",
     ],
-    AsignedTo: "",
+    AsignedTo: "Shakir",
   },
   {
     name: "Navbar.",
@@ -105,7 +121,8 @@ const componentsToBeDeveloped = [
       "Please try and develope for mobile screen as well to improve responsiveness.",
       "Take note this should be wrapped in a WhiteBackground Component",
     ],
-    AsignedTo: "This has been done",
+    AsignedTo: "Ovodo",
+    Completed: "Ovodo",
   },
   {
     name: "Footer.",
@@ -113,5 +130,84 @@ const componentsToBeDeveloped = [
     todo: ["Create a reusable Footer component."],
     AsignedTo: "Ada",
     Completed: "Ovodo",
+  },
+  {
+    name: "TransactinReceived.",
+    identifier: "Located on the second page on the Sender's Notification row.",
+    todo: ["Create a TransactionReceived Component."],
+    helpers: [
+      "This is a component used a content prop for the ModalComponent",
+      "Study the ModalComponent and how it was used in the IntermediaryRow Component",
+    ],
+    AsignedTo: "Shakir",
+    Completed: "",
+  },
+  {
+    name: "TransactinSubmitted.",
+    identifier:
+      "Located on the fourth page on the Intermediary (Receiver) Dashboard Notification row.",
+    todo: ["Create a TransactionSubmitted Component."],
+    helpers: [
+      "This is a component used a content prop for the ModalComponent",
+      "Study the ModalComponent and how it was used in the IntermediaryRow Component",
+    ],
+    AsignedTo: "Shakir",
+    Completed: "",
+  },
+  {
+    name: "AcceptTask.",
+    identifier:
+      "Located on the second page on the Intermediary (Receiver) Dashboard Notification row.",
+    todo: ["Create an AcceptTask Component."],
+    helpers: [""],
+    AsignedTo: "Shakir",
+    Completed: "",
+  },
+];
+
+const pagesToBeDeveloped = [
+  {
+    name: "Notification Page",
+    route: "use any of your choice as `/notification` is already being used",
+    identifier: "The first page on the Sender's Notification row / section",
+    todo: [
+      "Complete the notification page",
+      "Try your best to make it mobile responsive if possible",
+    ],
+    helpers: [
+      " N.B -  It consists mainly of the NotificationItem and three Nav options (All, Sender, and Intermediary)",
+    ],
+    AsignedTo: "Shakir",
+    Completed: "",
+  },
+  {
+    name: "Intermediary Dashboard",
+    route: "/intermediary",
+    identifier: "The first page on the Intermediary Dashboard row / section",
+    todo: [
+      "Complete the dashboard page.",
+      "Try your best to make it mobile responsive if possible",
+    ],
+    helpers: [
+      " N.B -  The top half has already been done",
+      "Breakdown to Components as much as possible",
+      "You can use the grid-cols styling to help you with the table or any other style you feel is better",
+    ],
+    AsignedTo: "Daniel",
+    Completed: "",
+  },
+  {
+    name: "Profile page",
+    route: "/profile",
+    identifier: "The first page on the Profile row / section",
+    todo: [
+      "Complete the profile page.",
+      "Try your best to make it mobile responsive if possible",
+    ],
+    helpers: [
+      "This page mostly uses the SelectComponent and regular inputs. Study the SelectComponent to fully understand how to use it best.",
+    ],
+    AsignedTo: "Daniel",
+    Completed: "",
   },
 ];

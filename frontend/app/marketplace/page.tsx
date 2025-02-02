@@ -21,7 +21,7 @@ const MarketPlace = () => {
   //------------------------------------------------------------------USE EFFECTS
 
   return (
-    <section className='px-[15vw] flex flex-col min-h-[89.76svh] pt-[45px]'>
+    <section className='px-[5vw] sm:px-[15vw] flex flex-col min-h-[89.76svh] pt-[45px]'>
       <div className='mb-8'>
         <h5 className='font-semibold text-2xl mb-3'>Send Money</h5>
         <p className='text-light_ash'>

@@ -4,6 +4,7 @@ import AppButton from "./AppButton";
 import { useState } from "react";
 import ModalComponent from "../shared/modals/ModalComponent";
 import ConfirmIntermediaryModal from "../shared/modals/ConfirmIntermediaryModal";
+import TransactionSuccessful from "../shared/modals/TransactionSuccessful";
 
 const IntermediaryRow = ({ item }: { item: Intermediary }) => {
   // --------------------------------------------VARIABLES
@@ -22,6 +23,7 @@ const IntermediaryRow = ({ item }: { item: Intermediary }) => {
           isModalOpen={confirm}
           setIsModalOpen={setConfirm}
           Content={<ConfirmIntermediaryModal item={item} close={setConfirm} />}
+          // Content={<TransactionSuccessful />}
         />
       )}
       <div className='flex gap-2   flex-col'>

@@ -85,13 +85,15 @@ const SendMoneyComponent: React.FC = () => {
   return (
     <div className='flex w-full mx-auto sm:w-[468px] flex-col'>
       <div className='h-[24px] w-full mb-[10px] flex items-center justify-center gap-3 bg-[#FFFADB] rounded-sm'>
-        <p>{`1 ${fromSymb} = ${to ?? ""} ${toSymb}*`}</p>
+        <p className=' text-sm sm:text-base'>{`1 ${fromSymb} = ${
+          to ?? ""
+        } ${toSymb}*`}</p>
         <p className='text-xs underline'>Show fees</p>
       </div>
       <WhiteBackground
         styles={`${lexend.className} w-full  h-max  relative  rounded-lg shadow-sm p-[30px]`}
       >
-        <h2 className='text-2xl text-start font-semibold text-[#212529] mb-5'>
+        <h2 className='text-xl sm:text-2xl text-start font-semibold text-[#212529] mb-5'>
           Send money online
         </h2>
 
@@ -128,8 +130,8 @@ const SendMoneyComponent: React.FC = () => {
             </p>
           )}
         </div>
-        <div className='flex flex-col'>
-          <div className='flex gap-2  items-center mt-5 '>
+        <div className='flex w-full flex-col'>
+          <div className='flex w-full gap-2  items-center mt-5 '>
             <div className=''>
               <label className='block text-sm font-medium text-header_black mb-2'>
                 Send amount
@@ -144,7 +146,7 @@ const SendMoneyComponent: React.FC = () => {
                     setAmounts(value);
                   }
                 }}
-                className={`w-[188px] h-[50px] p-4 bg-[#fafafa] border ${
+                className={`w-full sm:w-[188px] h-[50px] p-4 bg-[#fafafa] border ${
                   amountError ? "border-error" : "border-border"
                 } rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
@@ -167,7 +169,7 @@ const SendMoneyComponent: React.FC = () => {
                 placeholder='0.00'
                 readOnly
                 value={sendAmount ? (parseInt(sendAmount) * to).toFixed(0) : ""}
-                className={`w-[188px] h-[50px] p-4 bg-[#fafafa] border ${
+                className={`w-full sm:w-[188px] h-[50px] p-4 bg-[#fafafa] border ${
                   amountError ? "border-error" : "border-border"
                 } rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />

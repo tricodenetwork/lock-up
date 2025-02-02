@@ -233,7 +233,7 @@ const SelectComponent = ({
                 alt='tick'
               />
             )}
-            <p>{value.name}</p>
+            <p className='font-medium'>{value.name}</p>
           </div>
         )}
         <div
