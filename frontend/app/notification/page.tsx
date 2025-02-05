@@ -8,8 +8,6 @@ import { useState } from "react";
 const Notification = () => {
   // --------------------------------------------VARIABLES
   const [disabled, setDisabled] = useState(true);
-  const [OpenTransactionSubmitted, setOpenTransactionSubmitted] =
-    useState(false);
 
   //-----------------------------------------------------------FUNCTIONS
 
@@ -19,10 +17,7 @@ const Notification = () => {
     <>
       <section className="px-[15vw] flex flex-col min-h-[89.76svh] pt-[45px]">
         <div>
-          <h6
-            onClick={() => setOpenTransactionSubmitted(true)}
-            className="text-[#1b1b1b] font-semibold text-2xl"
-          >
+          <h6 className="text-[#1b1b1b] font-semibold text-2xl">
             Notification
           </h6>
           <div className="flex items-center justify-between">
@@ -135,8 +130,6 @@ const Notification = () => {
           </div>
         </WhiteBackground>
       </section>
-
-      {OpenTransactionSubmitted && <TransactionSubmitted />}
     </>
   );
 };
