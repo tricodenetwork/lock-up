@@ -1,0 +1,36 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "AcceptTaskModal",
+    "AllTask",
+    "NotificationItem",
+    "NotificationPage",
+    "TransactionRecievedModal",
+    "TransactionSubmitted",
+    "integrations",
+    "main",
+    "origin"
+  ],
+  "parent": {
+    "AcceptTaskModal": "main",
+    "AllTask": "main",
+    "NotificationItem": "main",
+    "NotificationPage": "main",
+    "TransactionRecievedModal": "main",
+    "TransactionSubmitted": "main",
+    "integrations": "main",
+    "main": null,
+    "origin": "main"
+  },
+  "order": [
+    "main",
+    "AcceptTaskModal",
+    "AllTask",
+    "NotificationItem",
+    "NotificationPage",
+    "TransactionRecievedModal",
+    "TransactionSubmitted",
+    "integrations",
+    "origin"
+  ]
+}
