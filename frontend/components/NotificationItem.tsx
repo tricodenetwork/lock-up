@@ -12,18 +12,22 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   date,
 }) => {
   return (
-    <WhiteBackground styles="rounded-[16px] w-[1000px]">
-      <div className="flex flex-col  pt-[24px] pb-[20px] px-[24px] ">
-        <div className="flex justify-between ">
-          <span className="text-base font-bold">{notificationTitle}</span>
-          <span className="text-base font-medium text-[#999999]">{date}</span>
-        </div>
-
-        <span className="pt-[8px] text-base pb-[16px] border-b border-[#E6E6E6]">
-          {message}
+    // <WhiteBackground styles=" w-[1000px] ">
+    <div className="flex  flex-col  pt-[24px] pb-[20px] px-[24px] ">
+      <div className="flex justify-between ">
+        <span className="md:text-base text-xs font-bold">
+          {notificationTitle}
+        </span>
+        <span className="md:text-base text-xs font-medium text-[#999999]">
+          {date}
         </span>
       </div>
-    </WhiteBackground>
+
+      <span className="pt-[8px] md:text-base text-xs pb-[16px] border-b border-[#E6E6E6]">
+        {message}
+      </span>
+    </div>
+    // </WhiteBackground>
   );
 };
 
