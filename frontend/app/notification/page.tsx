@@ -2,6 +2,7 @@
 import AcceptTask from "@/components/shared/modals/AcceptTask";
 import TransactionSubmitted from "@/components/shared/modals/TransactionSubmitted";
 import TransactionRecived from "@/components/shared/modals/TransactionRecieved";
+import NotificationItem from "@/components/NotificationItem";
 import AppButton from "@/components/ui/AppButton";
 import WhiteBackground from "@/components/WhiteBackground";
 import Image from "next/image";
