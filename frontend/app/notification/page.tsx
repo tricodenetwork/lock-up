@@ -1,4 +1,5 @@
 "use client";
+import AcceptTask from "@/components/shared/modals/AcceptTask";
 import TransactionSubmitted from "@/components/shared/modals/TransactionSubmitted";
 import TransactionRecived from "@/components/shared/modals/TransactionRecieved";
 import AppButton from "@/components/ui/AppButton";
