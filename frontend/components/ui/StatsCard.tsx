@@ -19,7 +19,7 @@ const StatsCard = ({
   //------------------------------------------------------------------USE EFFECTS
 
   return (
-    <WhiteBackground styles='w-[309px] gap-4 flex items-center bg-white p-10 rounded-[20px] h-[151px]'>
+    <WhiteBackground styles='w-full gap-4 flex items-center bg-white p-10 rounded-[20px] h-[151px]'>
       <div
         style={{
           backgroundColor: color,

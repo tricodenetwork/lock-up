@@ -15,14 +15,16 @@ const SelectComponent = ({
   onChange,
   countries,
   error,
+  zIndex,
 }: {
   items: any[];
   label: string;
   placeholder: string;
-  style: string;
+  style?: string;
   error?: boolean;
   countries?: boolean;
   onChange: (e: any) => void;
+  zIndex?: number;
 }) => {
   // --------------------------------------------VARIABLES
 
@@ -111,30 +113,35 @@ const SelectComponent = ({
         }}
         onKeyDown={handleKeyDown} // Add keyboard event handler
         tabIndex={0} // Make the div focusable
-        className={`flex cursor-pointer ${style} w-full h-[50px] text-sm bg-[#FAFAFA] border ${
+        className={`flex  cursor-pointer ${style} w-full h-[50px] text-sm bg-[#FAFAFA] border ${
           error ? "border-error" : "border-[#EBECE6]"
         } rounded-md text-header_black font-light ${
           open && "border  border-[#FFDD00]"
-        } items-center z-10 relative`}
+        } items-center  relative`}
       >
         <AnimatePresence mode='wait'>
           {open && (
             <motion.div
+              style={{ zIndex: zIndex }}
               onClick={(e) => e.stopPropagation()}
               initial={{ opacity: 100, height: 0 }}
               animate={{
                 opacity: 100,
-                height: countries ? 408 : 200,
+                height: countries
+                  ? 408
+                  : items.length > 5
+                  ? 300
+                  : "max-content",
               }}
               exit={{ opacity: 100, height: 0 }}
               transition={{ duration: 0.1, type: "tween" }}
-              className='w-full shadow-[_0px_0px_20px] shadow-black/10 h-[408px] flex flex-col absolute top-[105%] pt-5 border border-[#EBECE6] bg-white rounded-[4px]'
+              className='w-full shadow-[_0px_0px_20px]  max-h-[408px] shadow-black/10 h-max flex flex-col absolute top-[105%] pt-5 border border-[#EBECE6] bg-white rounded-[4px]'
             >
               {/* Search Input */}
               {countries && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className='w-[90%] rounded-[4px] relative ml-5 px-5  flex items-center text-sm bg-[#FAFAFA] border border-[#EBECE6] h-[50px]'
+                  className='w-[90%] rounded-[4px] relative ml-5 px-5  flex items-center text-sm bg-[#FAFAFA] border border-[#EBECE6] min-h-[50px]'
                 >
                   <Image
                     src={"/assets/icons/search-normal.svg"}
@@ -158,14 +165,19 @@ const SelectComponent = ({
                   Frequently selected countries
                 </h6>
               )}
-              <div className='flex h-[350px] z-50 overflow-y-scroll flex-col'>
+              <div className='flex h-max z-50 overflow-y-scroll flex-col'>
                 {filteredItems.map((item, i) => (
                   <button
                     key={i.toString()}
                     style={{ fontSize: 14 }}
                     onClick={() => {
-                      onChange(item);
-                      setVal(item);
+                      if (countries) {
+                        onChange(item);
+                        setVal(item);
+                      } else {
+                        onChange(item);
+                        setVal(item);
+                      }
                       setOpen(false);
                     }}
                     className={`regular cursor-pointer ${

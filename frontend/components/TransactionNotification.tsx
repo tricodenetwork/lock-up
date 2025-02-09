@@ -2,6 +2,7 @@
 import Image from "next/image";
 import React from "react";
 import AppButton from "./ui/AppButton";
+import { motion } from "framer-motion";
 
 const TransactionNotification = ({
   header = "New Transaction Request",
@@ -19,22 +20,29 @@ const TransactionNotification = ({
   outAmount?: string;
 }) => {
   return (
-    <div className='w-[80%]  px-[60px] relative flex flex-col  justify-center h-[124px] bg-[#E7E9F8] rounded-[8px] border-[#0F27BD] border-[1.5px]'>
+    <motion.div
+      initial={{ translateY: -150 }}
+      animate={{ translateY: 0 }}
+      transition={{ duration: 0.6 }}
+      className='w-[82%]  mx-auto  absolute top-4  self-center flex py-[18px]  justify-between px-6 h-[124px] bg-[#E7E9F8] rounded-[8px] border-[#0F27BD] border-[1.5px]'
+    >
       <Image
         src={"/icons/info.svg"}
         width={24}
         height={24}
         alt='info'
-        className='absolute top-3 left-3'
+        className='w-6 h-6 mr-4'
       />
-      <h6 className='text-[#252730] font-medium text-[20px]'>{header}</h6>
-      <p className='text-[#252730] w-[80%] text-[16px]'>{description}</p>
+      <div className='flex flex-col justify-between w-[85%] '>
+        <h6 className='text-[#252730] font-medium text-[20px]'>{header}</h6>
+        <p className='text-[#252730] w-[100%] text-[16px]'>{description}</p>
+      </div>
       <AppButton
         title='View Details'
-        style='absolute w-max bg-appBlue z-50 right-3 my-ayto '
+        style='w-max bg-appBlue self-center h-[19px] z-50 my-ayto '
         action={() => console.log("he")}
       />
-    </div>
+    </motion.div>
   );
 };
 
