@@ -152,7 +152,7 @@ const componentsToBeDeveloped = [
       "Study the ModalComponent and how it was used in the IntermediaryRow Component",
     ],
     AsignedTo: "Shakir",
-    Completed: "",
+    Completed: "Shakir",
   },
   {
     name: "AcceptTask.",
@@ -161,7 +161,7 @@ const componentsToBeDeveloped = [
     todo: ["Create an AcceptTask Component."],
     helpers: [""],
     AsignedTo: "Shakir",
-    Completed: "",
+    Completed: "Shakir",
   },
 ];
 
@@ -178,7 +178,7 @@ const pagesToBeDeveloped = [
       " N.B -  It consists mainly of the NotificationItem and three Nav options (All, Sender, and Intermediary)",
     ],
     AsignedTo: "Shakir",
-    Completed: "",
+    Completed: "Shakir",
   },
   {
     name: "Intermediary Dashboard",
