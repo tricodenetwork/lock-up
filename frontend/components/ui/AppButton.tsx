@@ -22,7 +22,7 @@ const AppButton = ({
         href={href}
         className={`${style} ${
           !style?.includes("bg-") && "bg-appBlue hover:bg-suiBlue hover:text"
-        } duration-150  hover:border-suiBlue hover:border border rounded-[8px] flex items-center justify-center  h-[53px] p-4 text-white text-sm`}
+        } duration-150  hover:border-suiBlue hover:border border rounded-[8px] flex items-center justify-center  h-[53px] p-4  text-sm`}
       >
         {title}
       </Link>
@@ -35,7 +35,7 @@ const AppButton = ({
         onClick={action}
         className={`${style} ${
           !style?.includes("bg-") && "bg-appBlue hover:bg-suiBlue hover:text"
-        } duration-150 hover:border-suiBlue hover:border border rounded-[8px] flex items-center justify-center  h-[53px] p-4 text-white text-sm`}
+        } duration-150 hover:border-suiBlue hover:border border rounded-[8px] flex items-center justify-center  h-[53px] p-4   text-sm`}
       >
         {title}
       </button>
