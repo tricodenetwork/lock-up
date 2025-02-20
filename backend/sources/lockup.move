@@ -143,7 +143,7 @@ module lockup::lockup{
         receiver:Option<address>,
         started:Option<u64>,
         finished:Option<u64>,
-        currency:string::String,
+        currency:vector<u8>,
         amount_in_fiat:u64,
         sent:bool,
         received:bool,
@@ -154,7 +154,7 @@ module lockup::lockup{
         average_complete_time:u64,
         total_completion_time:u64,
         online:bool,
-        payment_methods:vector<string::String>
+        // payment_methods:vector<string::String>
     }
     // inside pact space forget wet sign amateur vanish drive pulse exhibit throw
 
@@ -196,13 +196,12 @@ module lockup::lockup{
         transfer::share_object(app);
     }
 
-    public fun register_user(ctx:&mut TxContext, app:&mut LockUp, payment_methods:vector<string::String>){
+    public fun register_user(ctx:&mut TxContext, app:&mut LockUp){
         let sender = tx_context::sender(ctx);
         let user = User {
             total_trades_completed:0,
             average_complete_time:0,
             total_completion_time:0,
-            payment_methods,
             online:false,
         };
         table::add(&mut app.users , sender, user);
@@ -213,11 +212,11 @@ module lockup::lockup{
     (
         ctx:&mut TxContext,
         app:&mut LockUp,
-        clock:&mut Clock,
+        clock:&Clock,
         in_amount_fiat:u64,
-        in_currency:string::String,
+        in_currency:vector<u8>,
         out_amount_fiat:u64,
-        out_currency:string::String,
+        out_currency:vector<u8>,
         amount_in_sui:u64,
         ) {
         let sender = tx_context::sender(ctx);
@@ -299,56 +298,37 @@ module lockup::lockup{
 
     }
 
-    public fun confirm_sent_payment(ctx:&mut TxContext, cbp:&mut CrossBorderPayment,incoming:bool,clock:&mut Clock) {
+    public fun confirm_sent_payment(ctx:&mut TxContext, transaction:&mut Transaction,clock:&Clock) {
         let sender = tx_context::sender(ctx);
 
-        if( incoming){
-            let in = &mut cbp.in;
-            assert!(option::some(sender) == in.sender,ErrSenderMismatch);
-            in.sent = true;
-            in.started = option::some(clock::timestamp_ms(clock))
+        assert!(option::some(sender) == transaction.sender,ErrSenderMismatch);
+        transaction.sent = true;
+        transaction.started = option::some(clock::timestamp_ms(clock))
 
-        }else {
-            let out = &mut cbp.out;
-            assert!(option::some(sender) == out.sender,ErrSenderMismatch);
-            out.sent = true;
-            out.started = option::some(clock::timestamp_ms(clock))
-
-
-        }
 
     }
 
 
-    public fun confirm_received_payment(ctx:&mut TxContext,app:&mut LockUp,cbp:&mut CrossBorderPayment, incoming:bool ,clock:&mut Clock) {
+    public fun confirm_received_payment(ctx:&mut TxContext,transaction:&mut Transaction,clock:&Clock) {
         let sender = tx_context::sender(ctx);
 
-        if( incoming){
-            let in = &mut cbp.in;
-            assert!(option::some(sender) == in.receiver,ErrSenderMismatch);
-            in.received = true;
-            in.finished = option::some(clock::timestamp_ms(clock));
-            calculate_user_statistics(*option::borrow(&in.receiver),app,in);
-            calculate_user_statistics(*option::borrow(&in.sender),app,in);
+        assert!(option::some(sender) == transaction.receiver,ErrSenderMismatch);
+        transaction.received = true;
+        transaction.finished = option::some(clock::timestamp_ms(clock));
 
-        }else {
-            let out = &mut cbp.out;
-            assert!(option::some(sender) == out.receiver,ErrSenderMismatch);
-            out.received = true;
-            let sui = option::extract(&mut cbp.sui);
-            let sui = coin::from_balance(sui, ctx);
-            transfer::public_transfer(sui, *option::borrow(&out.sender));
-            out.finished = option::some(clock::timestamp_ms(clock));
-            calculate_user_statistics(*option::borrow(&out.receiver),app,out);
-            calculate_user_statistics(*option::borrow(&out.sender),app,out);
-            
-            
+    }
 
-        }
+    public fun release_sui(ctx:&mut TxContext,cbp:&mut CrossBorderPayment){
+        assert!(cbp.out.received,ErrNotCompleted);
+        assert!(cbp.in.received,ErrNotCompleted);
+            
+        let sui = option::extract(&mut cbp.sui);
+        let sui = coin::from_balance(sui, ctx);
+        transfer::public_transfer(sui, *option::borrow(&cbp.out.sender));
     }
 
 
-    public fun add_to_online_users(app:&mut LockUp,receiver:bool,clock:&mut Clock, min:u64,max:u64,currency:vector<u8>,ctx:&mut TxContext,_locked_sui:&LockedSui<Coin<SUI>>){
+    public fun add_to_online_users(app:&mut LockUp,receiver:bool,clock:&Clock, min:u64,max:u64,currency:vector<u8>,ctx:&mut TxContext,_locked_sui:&LockedSui<Coin<SUI>>){
 
 
         if(receiver){
@@ -425,12 +405,12 @@ module lockup::lockup{
 
 
     /// View Functions ///
-   public fun filter_users_by_payment_method(users: vector<User>,payment_method:&string::String) : vector<User>{
+//    public fun filter_users_by_payment_method(users: vector<User>,payment_method:&string::String) : vector<User>{
 
-        let filtered_users = vector::filter!<User>(users, |e| vector::contains(&e.payment_methods, payment_method));
-        filtered_users
+//         let filtered_users = vector::filter!<User>(users, |e| vector::contains(&e.payment_methods, payment_method));
+//         filtered_users
 
-    }
+//     }
 
     public fun get_cbp(app:&mut LockUp,id:u64):&CrossBorderPayment {
         let mut index = vector::find_index!(&app.cross_border_payments, |e| e.id == id);
@@ -440,12 +420,43 @@ module lockup::lockup{
     }
 
     /// Helper Methods ///
-    fun calculate_user_statistics(user:address,app:&mut LockUp,transaction:&Transaction){
-        let user_data = table::borrow_mut(&mut app.users, user);
-        let completion_time = *option::borrow<u64>(&transaction.finished)  - *option::borrow<u64>(&transaction.started);
-        user_data.total_trades_completed = user_data.average_complete_time + 1;
-        user_data.total_completion_time = user_data.total_completion_time + completion_time;
-        user_data.average_complete_time = user_data.total_completion_time/user_data.total_trades_completed;
+    fun calculate_user_statistics(app:&mut LockUp,id:u64,incoming:bool){
+        let  cbp = vector::borrow(&app.cross_border_payments, id);
+
+        if(incoming){
+            let completion_time = *option::borrow<u64>(&cbp.in.finished)  - *option::borrow<u64>(&cbp.in.started);
+            {
+            //Update receiver stats
+            let user_data_receiver = table::borrow_mut(&mut app.users, *option::borrow(&cbp.in.receiver));
+            user_data_receiver.total_trades_completed = user_data_receiver.average_complete_time + 1;
+            user_data_receiver.total_completion_time = user_data_receiver.total_completion_time + completion_time;
+            user_data_receiver.average_complete_time = user_data_receiver.total_completion_time/user_data_receiver.total_trades_completed
+            };
+
+            {
+            //Update sender stats
+            let user_data_sender = table::borrow_mut(&mut app.users, *option::borrow(&cbp.in.sender));
+            user_data_sender.total_trades_completed = user_data_sender.average_complete_time + 1;
+            user_data_sender.total_completion_time = user_data_sender.total_completion_time + completion_time;
+            user_data_sender.average_complete_time = user_data_sender.total_completion_time/user_data_sender.total_trades_completed
+            };
+        }
+        else {
+
+        let completion_time = *option::borrow<u64>(&cbp.out.finished)  - *option::borrow<u64>(&cbp.out.started);
+       { //Update receiver stats
+        let user_data_receiver = table::borrow_mut(&mut app.users, *option::borrow(&cbp.out.receiver));
+        user_data_receiver.total_trades_completed = user_data_receiver.average_complete_time + 1;
+        user_data_receiver.total_completion_time = user_data_receiver.total_completion_time + completion_time;
+        user_data_receiver.average_complete_time = user_data_receiver.total_completion_time/user_data_receiver.total_trades_completed};
+
+      {  //Update sender stats
+        let user_data_sender = table::borrow_mut(&mut app.users, *option::borrow(&cbp.out.sender));
+        user_data_sender.total_trades_completed = user_data_sender.average_complete_time + 1;
+        user_data_sender.total_completion_time = user_data_sender.total_completion_time + completion_time;
+        user_data_sender.average_complete_time = user_data_sender.total_completion_time/user_data_sender.total_trades_completed};
+        };
+        
         
     }
 
@@ -469,16 +480,16 @@ module lockup::lockup{
                 vector::length(&test_scenario::shared(&tx)),
                 expected_shared_objects
             );
-            print(&string::utf8(b"this is awesome"))
+            // print(&string::utf8(b"this is awesome"))
         };
 
         {
             let  mut clock = clock::create_for_testing(test_scenario::ctx(scenario));
             let mut app = test_scenario::take_shared<LockUp>(scenario);
             clock.set_for_testing(5000);
-            create_cross_border_payment(test_scenario::ctx(scenario), &mut app,&mut clock,10000,string::utf8(b"NGN"),70000,string::utf8(b"USD"),30
+            create_cross_border_payment(test_scenario::ctx(scenario), &mut app,&clock,10000,b"NGN",70000,b"USD",30
             );
-            print(&app.cross_border_payments);
+            // print(&app.cross_border_payments);
             test_scenario::return_shared(app);
             clock.destroy_for_testing();
         };
@@ -523,7 +534,7 @@ module lockup::lockup{
         {
             let  mut clock = clock::create_for_testing(test_scenario::ctx(scenario));
             clock.set_for_testing(5000);
-                  create_cross_border_payment(test_scenario::ctx(scenario), &mut app,&mut clock,10000,string::utf8(b"NGN"),70000,string::utf8(b"USD"),30
+                  create_cross_border_payment(test_scenario::ctx(scenario), &mut app,&clock,10000,b"NGN",70000,b"USD",30
             );
             clock.destroy_for_testing();
         };
@@ -572,7 +583,8 @@ module lockup::lockup{
 
         {
             let mut app = test_scenario::take_shared<LockUp>(scenario);
-            create_cross_border_payment(test_scenario::ctx(scenario), &mut app,&mut clock,10000,string::utf8(b"NGN"),70000,string::utf8(b"USD"),30
+            register_user(test_scenario::ctx(scenario),&mut app);
+            create_cross_border_payment(test_scenario::ctx(scenario), &mut app,&clock,10000,b"NGN",70000,b"USD",30
             );
             test_scenario::return_shared(app);
         };
@@ -581,6 +593,7 @@ module lockup::lockup{
 
         {
             let mut app = test_scenario::take_shared<LockUp>(scenario);
+            register_user(test_scenario::ctx(scenario),&mut app);
             let  cbp = vector::borrow_mut(&mut app.cross_border_payments, 0);
             let payment = coin::mint_for_testing<SUI>(50, test_scenario::ctx(scenario));
             lock_sui(payment, test_scenario::ctx(scenario));
@@ -594,31 +607,28 @@ module lockup::lockup{
 
         let _tx = test_scenario::next_tx(scenario, module_owner);
 
-        {
             let mut app = test_scenario::take_shared<LockUp>(scenario);
+        {
             let  cbp = vector::borrow_mut(&mut app.cross_border_payments, 0);
             assert!(option::is_some(&cbp.sui),ErrNotEnuoghSui);
             assert!(cbp.in.receiver == option::some(receiver_intermediary),ErrAddressMismatch);
 
-            confirm_sent_payment(test_scenario::ctx(scenario), cbp, true, &mut clock);
-            test_scenario::return_shared(app);
+            confirm_sent_payment(test_scenario::ctx(scenario), &mut cbp.in, &clock);
             assert!(cbp.in.sent,ErrNotCompleted)
         };
+            test_scenario::return_shared(app);
 
         test_scenario::next_tx(scenario, receiver_intermediary);
         {
             let mut app = test_scenario::take_shared<LockUp>(scenario);
             let  cbp = vector::borrow_mut(&mut app.cross_border_payments, 0);
-            // confirm_sent_payment(test_scenario::ctx(scenario), cbp, true, &mut clock);
-            confirm_received_payment(test_scenario::ctx(scenario),&mut app, cbp, true, &mut clock);
+            confirm_received_payment(test_scenario::ctx(scenario),&mut cbp.in,&clock);
+            calculate_user_statistics(&mut app,0,true);
             test_scenario::return_shared(app);
             // print(&cbp.in.started);
         };
-        {
-            
 
-            
-            
+        {
             clock.destroy_for_testing();
         };
 

@@ -10,6 +10,9 @@ import Image from "next/image";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { Transaction } from "@mysten/sui/transactions";
+import clientConfig from "@/config/clientConfig";
+import { useCustomWallet } from "@/contexts/CustomWallet";
 
 const SendMoneyComponent: React.FC = () => {
   const [sendersCountry, setSenderCountry] = useState<Country | null>(null);
@@ -23,6 +26,8 @@ const SendMoneyComponent: React.FC = () => {
   const router = useRouter();
   const fromSymb = sendersCountry?.currencies[0] ?? "";
   const toSymb = receiversCountry?.currencies[0] ?? "";
+
+  const { executeTransactionBlockWithoutSponsorship } = useCustomWallet();
 
   const paymentMethods = [
     { value: "bank", name: "Bank Account" },
@@ -45,7 +50,7 @@ const SendMoneyComponent: React.FC = () => {
     setSendAmount(e);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!sendersCountry) {
       setSenderCountryError(true);
     }
@@ -60,7 +65,30 @@ const SendMoneyComponent: React.FC = () => {
       console.log("fjs");
       return;
     }
-    // window.location.href = "/marketplace";
+
+    try {
+      const txb = new Transaction();
+
+      txb.moveCall({
+        target: `${clientConfig.PACKAGE_ID}::lockup::create_cross_border_payment`,
+        arguments: [
+          txb.object(clientConfig.APP_ID),
+          txb.object("0x6"),
+          txb.pure.u64(sendAmount),
+          txb.pure.string(sendersCountry?.alpha3 as string),
+          txb.pure.u64(to),
+          txb.pure.string(receiversCountry?.alpha3 as string),
+        ],
+      });
+
+      const res = await executeTransactionBlockWithoutSponsorship({
+        tx: txb,
+        options: {
+          showEffects: true,
+          showObjectChanges: true,
+        },
+      });
+    } catch (error) {}
     router.push("/marketplace");
   };
 

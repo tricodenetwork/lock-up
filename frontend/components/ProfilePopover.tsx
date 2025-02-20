@@ -17,10 +17,40 @@ import {
 } from "@/components/ui/card";
 import { useCustomWallet } from "@/contexts/CustomWallet";
 import { ExternalLink } from "lucide-react";
+import { useEffect } from "react";
+import { Transaction } from "@mysten/sui/transactions";
+import clientConfig from "@/config/clientConfig";
 
 export default function ProfilePopover() {
-  const { isConnected, logout, redirectToAuthUrl, emailAddress, address } =
-    useCustomWallet();
+  const {
+    isConnected,
+    logout,
+    executeTransactionBlockWithoutSponsorship,
+    redirectToAuthUrl,
+    emailAddress,
+    address,
+  } = useCustomWallet();
+
+  useEffect(() => {
+    const registerUser = async () => {
+      try {
+        const txb = new Transaction();
+
+        txb.moveCall({
+          target: `${clientConfig.PACKAGE_ID}::lockup::register_user`,
+          arguments: [txb.object("0x6")],
+        });
+
+        const res = await executeTransactionBlockWithoutSponsorship({
+          tx: txb,
+          options: {
+            showEffects: true,
+            showObjectChanges: true,
+          },
+        });
+      } catch (error) {}
+    };
+  }, [isConnected]);
 
   if (isConnected) {
     return (

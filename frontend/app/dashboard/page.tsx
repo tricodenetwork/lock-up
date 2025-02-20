@@ -7,6 +7,7 @@ import TransactionNotification from "@/components/TransactionNotification";
 import SendMoneyComponent from "@/components/SendMoneyComponent";
 import { Box } from "@/components/ui/ValueBox";
 import OutsideClickHandler from "react-outside-click-handler";
+import { useCreateCounterTransaction } from "@/hooks/useCreateCounterTransaction";
 const lexend = Lexend({ subsets: ["latin", "latin-ext", "vietnamese"] });
 
 const boxDetails = [
@@ -30,6 +31,7 @@ const boxDetails = [
 const Page = () => {
   const [send, setSend] = useState(false);
   const [receive, setReceive] = useState(false);
+  const { handleExecute } = useCreateCounterTransaction();
   return (
     <div className='flex  flex-col px-4 min-h-[89.76svh] gap-8 py-8 relative flex-1 justify-around'>
       {/* <div className='absolute w-screen flex justify-center top-10 self-center'>
@@ -75,8 +77,9 @@ const Page = () => {
                 styles=' w-[95%] active:scale-95 duration-300 lg:w-[1004px] mx-auto h-[111px] hover:scale- hover:border border-header_black/25  duration-100 cursor-pointer rounded-[9px] flex items-center justify-center'
               >
                 <button
-                  onClick={() =>
-                    item.includes("Send") ? setSend(true) : setReceive(true)
+                  onClick={
+                    () => handleExecute()
+                    // item.includes("Send") ? setSend(true) : setReceive(true)
                   }
                   className='text-[#666666] flex-1 h-full text-sm'
                 >
