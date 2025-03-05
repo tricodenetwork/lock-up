@@ -7,10 +7,12 @@ import ConfirmIntermediaryModal from "../shared/modals/ConfirmIntermediaryModal"
 import TransactionSuccessful from "../shared/modals/TransactionSuccessful";
 import TransactionSubmitted from "../shared/modals/TransactionSubmitted";
 import TransactionRecived from "../shared/modals/TransactionRecieved";
+import ConfirmPaymentSent from "../shared/modals/ConfirmPaymentSent";
 
 const IntermediaryRow = ({ item }: { item: Intermediary }) => {
   // --------------------------------------------VARIABLES
   const [confirm, setConfirm] = useState(false);
+  const [proceed, setProceed] = useState(false);
 
   //-----------------------------------------------------------FUNCTIONS
 
@@ -24,7 +26,15 @@ const IntermediaryRow = ({ item }: { item: Intermediary }) => {
         <ModalComponent
           isModalOpen={confirm}
           setIsModalOpen={setConfirm}
-          Content={<ConfirmIntermediaryModal item={item} close={setConfirm} />}
+          Content={<ConfirmIntermediaryModal proceed={setProceed} item={item} close={setConfirm} />}
+          // Content={<TransactionRecived />}
+        />
+      )}
+      {proceed && (
+        <ModalComponent
+          isModalOpen={confirm}
+          setIsModalOpen={setConfirm}
+          Content={<ConfirmPaymentSent/>}
           // Content={<TransactionRecived />}
         />
       )}

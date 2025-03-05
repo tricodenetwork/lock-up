@@ -13,6 +13,9 @@ const { networkConfig, useNetworkVariable, useNetworkVariables } =
   	mainnet: {
   		url: getFullnodeUrl("mainnet"),
   	},
+	local:{
+		url:getFullnodeUrl("localnet")
+	}
   });
 
 export { useNetworkVariable, useNetworkVariables, networkConfig };

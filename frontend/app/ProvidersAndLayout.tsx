@@ -31,6 +31,7 @@ export const ProvidersAndLayout = ({ children }: ChildrenProps) => {
   const { networkConfig } = createNetworkConfig({
     testnet: { url: getFullnodeUrl("testnet") },
     mainnet: { url: getFullnodeUrl("mainnet") },
+    localnet: { url: getFullnodeUrl("localnet") },
   });
   const [storage, setStorage] = useState<StorageAdapter | null>(null);
 

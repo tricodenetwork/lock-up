@@ -15,7 +15,7 @@ const clientConfigSchema = z.object({
   GOOGLE_CLIENT_ID: z.string(),
   PACKAGE_ID: z.string(),
   APP_ID: z.string(),
-  GLOBAL_COUNTER_ID: z.string(),
+  CLOCK_ID: z.string(),
 });
 
 const clientConfig = clientConfigSchema.parse({
@@ -27,7 +27,7 @@ const clientConfig = clientConfigSchema.parse({
   GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
   PACKAGE_ID: process.env.NEXT_PUBLIC_PACKAGE_ID!,
   APP_ID: process.env.NEXT_PUBLIC_APP_ID!,
-  GLOBAL_COUNTER_ID: process.env.NEXT_PUBLIC_GLOBAL_COUNTER_ID!,
+  CLOCK_ID: process.env.NEXT_PUBLIC_CLOCK_ID!,
 });
 
 export default clientConfig;

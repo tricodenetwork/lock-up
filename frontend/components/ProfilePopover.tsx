@@ -20,6 +20,7 @@ import { ExternalLink } from "lucide-react";
 import { useEffect } from "react";
 import { Transaction } from "@mysten/sui/transactions";
 import clientConfig from "@/config/clientConfig";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePopover() {
   const {
@@ -30,6 +31,7 @@ export default function ProfilePopover() {
     emailAddress,
     address,
   } = useCustomWallet();
+  const router = useRouter();
 
   useEffect(() => {
     const registerUser = async () => {
@@ -37,8 +39,8 @@ export default function ProfilePopover() {
         const txb = new Transaction();
 
         txb.moveCall({
-          target: `${clientConfig.PACKAGE_ID}::lockup::register_user`,
-          arguments: [txb.object("0x6")],
+          target: `${clientConfig.PACKAGE_ID}::lockup::create_cross_border_payment`,
+          arguments: [txb.object(clientConfig.APP_ID), txb.object("0x6")],
         });
 
         const res = await executeTransactionBlockWithoutSponsorship({
@@ -50,47 +52,53 @@ export default function ProfilePopover() {
         });
       } catch (error) {}
     };
+
+    if (isConnected) {
+      router.push("/dashboard");
+      window.location.href = "/dashboard";
+    }
+    console.log("connected", isConnected);
   }, [isConnected]);
 
   if (isConnected) {
     return (
       <Popover>
         <PopoverTrigger asChild>
-          <div className=''>
+          <div className="">
             <Button
-              className='hidden bg-appBlack text-white text-sm sm:block  hover:opacity-80  rounded-[12px] w-max px-4 h-[53px]'
+              className="hidden bg-appBlack text-white text-sm sm:block  hover:opacity-80  rounded-[12px] w-max px-4 h-[53px]"
               variant={"secondary"}
             >
               {emailAddress}
             </Button>
-            <Avatar className='block sm:hidden'>
-              <AvatarImage src='https://github.com/shadcn.png' />
-              <AvatarFallback className='text-black'>CN</AvatarFallback>
+            <Avatar className="block sm:hidden">
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback className="text-black">CN</AvatarFallback>
             </Avatar>
           </div>
         </PopoverTrigger>
-        <PopoverContent className='w-max p-0'>
-          <Card className='border-none justify-center  h-[80px] w-[150px] sm:w-[200px] bg-appBlack text-white flex flex-col items-center shadow-none'>
-            <CardContent className='p-0'>
-              <div className='flex flex-row gap-1 items-center'>
-                <div className='flex flex-row text-sm gap-1'>
+        <PopoverContent className="w-max p-0">
+          <Card className="border-none justify-center  h-[80px] w-[150px] sm:w-[200px] bg-appBlack text-white flex flex-col items-center shadow-none">
+            <CardContent className="p-0">
+              <div className="flex flex-row gap-1 items-center">
+                <div className="flex flex-row text-sm gap-1">
                   <span>{`${address?.slice(0, 5)}...${address?.slice(
                     63
                   )}`}</span>
                   <a
                     href={`https://suiscan.xyz/testnet/account/${address}`}
-                    target='_blank'
+                    target="_blank"
                   >
                     <ExternalLink width={12} />
                   </a>
                 </div>
               </div>
             </CardContent>
-            <CardFooter className='flex m-0 p-0'>
+            <CardFooter className="flex m-0 p-0">
               <Button
                 variant={"destructive"}
                 size={"sm"}
-                className='w-full p-0 h-max text-center'
+                className="w-full p-0 h-max text-center"
                 onClick={logout}
               >
                 Logout
@@ -104,13 +112,13 @@ export default function ProfilePopover() {
 
   return (
     <Button
-      className='bg-appBlack text-white  hover:opacity-80 text-sm rounded-[12px] w-[100px] sm:w-[154px] h-[53px]'
+      className="bg-appBlack text-white  hover:opacity-80 text-sm rounded-[12px] w-[100px] sm:w-[154px] h-[53px]"
       onClick={() => {
         redirectToAuthUrl();
       }}
     >
-      <span className='hidden sm:flex'>Connect Wallet</span>
-      <span className='block sm:hidden'>Connect </span>
+      <span className="hidden sm:flex">Connect Wallet</span>
+      <span className="block sm:hidden">Connect </span>
     </Button>
   );
 }

@@ -1,13 +1,19 @@
 "use client";
 import WhiteBackground from "@/components/WhiteBackground";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Lexend } from "next/font/google";
 import TransactionNotification from "@/components/TransactionNotification";
 import SendMoneyComponent from "@/components/SendMoneyComponent";
 import { Box } from "@/components/ui/ValueBox";
 import OutsideClickHandler from "react-outside-click-handler";
 import { useCreateCounterTransaction } from "@/hooks/useCreateCounterTransaction";
+import clientConfig from "@/config/clientConfig";
+import { Transaction } from "@mysten/sui/transactions";
+import { useCustomWallet } from "@/contexts/CustomWallet";
+import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
+import { useRouter } from "next/navigation";
+import { useSuiClient } from "@mysten/dapp-kit";
 const lexend = Lexend({ subsets: ["latin", "latin-ext", "vietnamese"] });
 
 const boxDetails = [
@@ -28,10 +34,54 @@ const boxDetails = [
   },
 ];
 
+
+
 const Page = () => {
   const [send, setSend] = useState(false);
   const [receive, setReceive] = useState(false);
-  const { handleExecute } = useCreateCounterTransaction();
+  const router = useRouter()
+   const {
+      isConnected,
+      logout,
+      executeTransactionBlockWithoutSponsorship,
+      redirectToAuthUrl,
+      emailAddress,
+      address,
+    } = useCustomWallet();
+const client = useSuiClient()
+    const registerUser = async () => {
+      try {
+        // const txb = new Transaction();
+
+        // txb.moveCall({
+        //   target: `${clientConfig.PACKAGE_ID}::lockup::register_user`,
+        //   arguments: [],
+        // });
+
+        // const res = await executeTransactionBlockWithoutSponsorship({
+        //   tx: txb,
+        //   options: {
+        //     showEffects: true,
+        //     showObjectChanges: true,
+        //   },
+        // });
+        const app = await client.getObject({
+          id: clientConfig.APP_ID,
+          options: { showContent: true },
+        });
+      
+        console.log(app)
+      } catch (error) {
+        console.error(error)
+      }
+
+    };
+    useEffect(() => { 
+
+      !isConnected && router.push("/");
+      console.log(isConnected,"connected")
+      
+     },[isConnected])
   return (
     <div className='flex  flex-col px-4 min-h-[89.76svh] gap-8 py-8 relative flex-1 justify-around'>
       {/* <div className='absolute w-screen flex justify-center top-10 self-center'>
@@ -78,8 +128,8 @@ const Page = () => {
               >
                 <button
                   onClick={
-                    () => handleExecute()
-                    // item.includes("Send") ? setSend(true) : setReceive(true)
+                    () =>  
+                      item.includes("Send") ? setSend(true) : setReceive(true)
                   }
                   className='text-[#666666] flex-1 h-full text-sm'
                 >

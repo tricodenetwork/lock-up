@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { Transaction } from "@mysten/sui/transactions";
 import clientConfig from "@/config/clientConfig";
 import { useCustomWallet } from "@/contexts/CustomWallet";
+import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
 
 const SendMoneyComponent: React.FC = () => {
   const [sendersCountry, setSenderCountry] = useState<Country | null>(null);
@@ -27,13 +28,31 @@ const SendMoneyComponent: React.FC = () => {
   const fromSymb = sendersCountry?.currencies[0] ?? "";
   const toSymb = receiversCountry?.currencies[0] ?? "";
 
-  const { executeTransactionBlockWithoutSponsorship } = useCustomWallet();
+  const {
+    executeTransactionBlockWithoutSponsorship,
+    sponsorAndExecuteTransactionBlock,
+  } = useCustomWallet();
 
   const paymentMethods = [
     { value: "bank", name: "Bank Account" },
     { value: "card", name: "Credit/Debit Card" },
     { value: "BTC", name: "Wallet Address" },
   ];
+
+  const client = new SuiClient({
+    url: getFullnodeUrl("testnet"), // Use testnet/mainnet as needed
+  });
+
+  const unsubscribe = client.subscribeEvent({
+    filter: {
+      MoveEventType: `${clientConfig.PACKAGE_ID}::lockup::CbpCreated`,
+    }, // Change to your event type
+    onMessage: (event) => {
+      console.log("Cross border creaated:", event);
+
+      // Emit event to frontend via WebSocket or other real-time system
+    },
+  });
 
   //-----------------------------------------------------------FUNCTIONS
 
@@ -73,23 +92,29 @@ const SendMoneyComponent: React.FC = () => {
         target: `${clientConfig.PACKAGE_ID}::lockup::create_cross_border_payment`,
         arguments: [
           txb.object(clientConfig.APP_ID),
-          txb.object("0x6"),
+          txb.object(clientConfig.CLOCK_ID),
           txb.pure.u64(sendAmount),
           txb.pure.string(sendersCountry?.alpha3 as string),
-          txb.pure.u64(to),
+          txb.pure.u64((parseInt(sendAmount) * to).toFixed(0)),
           txb.pure.string(receiversCountry?.alpha3 as string),
+          txb.pure.u64(30),
         ],
       });
 
-      const res = await executeTransactionBlockWithoutSponsorship({
+      const res: any = await executeTransactionBlockWithoutSponsorship({
         tx: txb,
         options: {
           showEffects: true,
           showObjectChanges: true,
+          showEvents: true,
         },
       });
-    } catch (error) {}
-    router.push("/marketplace");
+      const id = res.events[0].parsedJson.id;
+      console.log(res);
+      router.push(`/marketplace?id=${id}`);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   //------------------------------------------------------------------USE EFFECTS
@@ -111,63 +136,63 @@ const SendMoneyComponent: React.FC = () => {
   }, [toSymb]);
 
   return (
-    <div className='flex w-full mx-auto sm:w-[468px] flex-col'>
-      <div className='h-[24px] w-full mb-[10px] flex items-center justify-center gap-3 bg-[#FFFADB] rounded-sm'>
-        <p className=' text-sm sm:text-base'>{`1 ${fromSymb} = ${
+    <div className="flex w-full mx-auto sm:w-[468px] flex-col">
+      <div className="h-[24px] w-full mb-[10px] flex items-center justify-center gap-3 bg-[#FFFADB] rounded-sm">
+        <p className=" text-sm sm:text-base">{`1 ${fromSymb} = ${
           to ?? ""
         } ${toSymb}*`}</p>
-        <p className='text-xs underline'>Show fees</p>
+        <p className="text-xs underline">Show fees</p>
       </div>
       <WhiteBackground
         styles={`${lexend.className} w-full  h-max  relative  rounded-lg shadow-sm p-[30px]`}
       >
-        <h2 className='text-xl sm:text-2xl text-start font-semibold text-[#212529] mb-5'>
+        <h2 className="text-xl sm:text-2xl text-start font-semibold text-[#212529] mb-5">
           Send money online
         </h2>
 
-        <div className='mb-5 relative'>
+        <div className="mb-5 relative">
           <SelectComponent
             error={senderCountryError}
-            style='z-50'
+            style="z-50"
             label="Senders's country"
             onChange={setSender}
             items={countries.all as Country[]}
-            placeholder='Select country'
+            placeholder="Select country"
             countries={!false}
           />
           {senderCountryError && (
-            <p className='text-xs text-error mt-1'>
+            <p className="text-xs text-error mt-1">
               Please select your country
             </p>
           )}
         </div>
 
-        <div className='relative'>
+        <div className="relative">
           <SelectComponent
             error={receiveCountryError}
-            style='z-40'
+            style="z-40"
             label="Receiver's country"
             onChange={setReceiver}
             items={countries.all as Country[]}
-            placeholder='Select country'
+            placeholder="Select country"
             countries={!false}
           />
           {receiveCountryError && (
-            <p className='text-xs text-error mt-1'>
+            <p className="text-xs text-error mt-1">
               Please select the receiver country
             </p>
           )}
         </div>
-        <div className='flex w-full flex-col'>
-          <div className='flex w-full gap-2  items-center mt-5 '>
-            <div className=''>
-              <label className='block text-sm font-medium text-header_black mb-2'>
+        <div className="flex w-full flex-col">
+          <div className="flex w-full gap-2  items-center mt-5 ">
+            <div className="">
+              <label className="block text-sm font-medium text-header_black mb-2">
                 Send amount
               </label>
               <input
-                type='text'
+                type="text"
                 value={sendAmount}
-                placeholder='0.00'
+                placeholder="0.00"
                 onChange={(e) => {
                   const value = e.target.value;
                   if (/^\d*\.?\d*$/.test(value)) {
@@ -184,17 +209,17 @@ const SendMoneyComponent: React.FC = () => {
               src={"/assets/icons/exchange.svg"}
               width={16.94}
               height={14}
-              className='mt-6'
-              alt='exchange'
+              className="mt-6"
+              alt="exchange"
             />
 
-            <div className=''>
-              <label className='block text-sm font-medium text-header_black mb-2'>
+            <div className="">
+              <label className="block text-sm font-medium text-header_black mb-2">
                 Receive amount
               </label>
               <input
-                type='text'
-                placeholder='0.00'
+                type="text"
+                placeholder="0.00"
                 readOnly
                 value={sendAmount ? (parseInt(sendAmount) * to).toFixed(0) : ""}
                 className={`w-full sm:w-[188px] h-[50px] p-4 bg-[#fafafa] border ${
@@ -204,7 +229,7 @@ const SendMoneyComponent: React.FC = () => {
             </div>
           </div>
           {amountError && (
-            <p className='text-xs text-error mt-1'>
+            <p className="text-xs text-error mt-1">
               Please select an amount to send
             </p>
           )}
@@ -212,7 +237,7 @@ const SendMoneyComponent: React.FC = () => {
 
         <button
           onClick={handleSubmit}
-          className='w-full flex items-center justify-center h-[50px] gap-2 bg-[#FFDD00]  hover:bg-[#E3C500] text-appBlack font-semibold py-4 px-6 rounded-md mt-5'
+          className="w-full flex items-center justify-center h-[50px] gap-2 bg-[#FFDD00]  hover:bg-[#E3C500] text-appBlack font-semibold py-4 px-6 rounded-md mt-5"
         >
           Continue
           <Image
@@ -220,7 +245,7 @@ const SendMoneyComponent: React.FC = () => {
             src={"/assets/icons/arrow-down.svg"}
             width={10}
             height={17}
-            alt='down'
+            alt="down"
           />
         </button>
       </WhiteBackground>
