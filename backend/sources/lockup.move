@@ -268,6 +268,9 @@ module lockup::lockup{
             transaction.sender = option::none();
         }
     }
+
+
+    
     public fun update_transaction(transaction:&mut Transaction,in:bool,user:address){
         assert!(option::is_none(&transaction.started),ErrTxInProgress);
         if( in) {

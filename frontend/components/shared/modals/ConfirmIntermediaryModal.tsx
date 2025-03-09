@@ -4,12 +4,16 @@ import AppButton from "@/components/ui/AppButton";
 import WhiteBackground from "@/components/WhiteBackground";
 import clientConfig from "@/config/clientConfig";
 import { useCustomWallet } from "@/contexts/CustomWallet";
+import { useAppDispatch } from "@/redux/hooks";
+import { setActiveTransaction } from "@/redux/slices/transactions";
 import { Intermediary } from "@/types/Intermediary";
 import { useSuiClient } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
+
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const ConfirmIntermediaryModal = ({
   close,
@@ -23,17 +27,18 @@ const ConfirmIntermediaryModal = ({
   // --------------------------------------------VARIABLES
   const [disabled, setDisabled] = useState(true);
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { executeTransactionBlockWithoutSponsorship, address } =
     useCustomWallet();
-  const client = useSuiClient();
+  const dispatch = useAppDispatch();
 
+  const searchParams = useSearchParams();
   const id = searchParams.get("id") as string;
 
   //-----------------------------------------------------------FUNCTIONS
   console.log(address, "address");
 
   const confirmAndNotifyIntermediary = async () => {
+    const toastId = toast.loading("Loading..");
     try {
       const txb = new Transaction();
 
@@ -55,19 +60,11 @@ const ConfirmIntermediaryModal = ({
         },
       });
       console.log(res);
-      const app: any = await client.getObject({
-        id: clientConfig.APP_ID,
-        options: { showContent: true },
-      });
-      // console.log(app);
-      console.log(
-        app.data.content.fields.cross_border_payments.filter(
-          (item: any) => item.fields.id == id
-        )[0]
-      );
-
-      await TransactionInProgress(id);
+      const transactionId = await TransactionInProgress(id, address as string);
+      dispatch(setActiveTransaction(transactionId?.toString() as string));
+      toast.success("Intermediary Selected", { id: toastId });
     } catch (error) {
+      toast.error("Error", { id: toastId });
       console.error(error);
     }
   };
@@ -152,7 +149,7 @@ const ConfirmIntermediaryModal = ({
           disabled={disabled}
           action={() => {
             confirmAndNotifyIntermediary();
-            // router.push(`/notification?id=${id}`);
+            router.push(`/notification?id=${id}`);
           }}
           title="Proceed to Send Money"
           style="w-full disabled:bg-[#c4c4c4] bg-appBlue text-white"

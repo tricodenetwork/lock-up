@@ -8,6 +8,8 @@ import WhiteBackground from "@/components/WhiteBackground";
 import Image from "next/image";
 import { useState } from "react";
 import ConfirmPaymentSent from "@/components/shared/modals/ConfirmPaymentSent";
+import ModalComponent from "@/components/shared/modals/ModalComponent";
+import TransactionSuccessful from "@/components/shared/modals/TransactionSuccessful";
 
 const Notification = () => {
   // --------------------------------------------VARIABLES

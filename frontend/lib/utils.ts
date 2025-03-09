@@ -30,3 +30,9 @@ export const navItems: NavItem[] = [
     label: "Investments",
   },
 ];
+
+export const baseUrl =
+  process.env.NODE_ENV == "production"
+    ? "https://lockup.ai/"
+    : "http://localhost:3000/";
+

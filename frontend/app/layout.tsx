@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 const nunito = Nunito({
   weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["cyrillic", "cyrillic-ext"],
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
 });
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang="en">
       <body className={`${nunito.className} antialiased h-full bg-background`}>
         <ProvidersAndLayout>
           <Header />

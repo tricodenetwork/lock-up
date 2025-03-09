@@ -18,6 +18,7 @@ import CustomWalletProvider from "@/contexts/CustomWallet";
 import { Toaster } from "@/components/ui/sonner";
 import { Toaster as Toast } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
+import { Providers } from "@/redux/Provider";
 
 export interface StorageAdapter {
   setItem(key: string, value: string): Promise<void>;
@@ -69,12 +70,14 @@ export const ProvidersAndLayout = ({ children }: ChildrenProps) => {
           <EnokiFlowProvider apiKey={clientConfig.ENOKI_API_KEY}>
             <AuthenticationProvider>
               <CustomWalletProvider>
+                <Providers>
                 <main className='min-h-screen  relative flex flex-col'>
                   {children}
                   <Toaster duration={2000} />
                   <Toast />
                   <Analytics />
                 </main>
+                </Providers>
               </CustomWalletProvider>
             </AuthenticationProvider>
           </EnokiFlowProvider>

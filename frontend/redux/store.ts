@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./slices/userSlice";
+import transactionReducer from "./slices/transactions";
 
 export const store = configureStore({
-  reducer: { Search: userReducer },
+  reducer: { Search: userReducer,transactions:transactionReducer  },
   devTools: process.env.NODE_ENV !== "production",
 });
 

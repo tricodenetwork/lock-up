@@ -19,10 +19,11 @@ const ModalComponent = ({
   };
   return (
     <Modal
+      ariaHideApp={false}
       isOpen={isModalOpen}
       onRequestClose={closeModal}
-      className='modal bord bg-transparent'
-      overlayClassName='overlay'
+      className="modal bord bg-transparent"
+      overlayClassName="overlay"
     >
       {Content}
     </Modal>

@@ -39,21 +39,6 @@ const SendMoneyComponent: React.FC = () => {
     { value: "BTC", name: "Wallet Address" },
   ];
 
-  const client = new SuiClient({
-    url: getFullnodeUrl("testnet"), // Use testnet/mainnet as needed
-  });
-
-  const unsubscribe = client.subscribeEvent({
-    filter: {
-      MoveEventType: `${clientConfig.PACKAGE_ID}::lockup::CbpCreated`,
-    }, // Change to your event type
-    onMessage: (event) => {
-      console.log("Cross border creaated:", event);
-
-      // Emit event to frontend via WebSocket or other real-time system
-    },
-  });
-
   //-----------------------------------------------------------FUNCTIONS
 
   const setSender = (e: any) => {
@@ -70,6 +55,7 @@ const SendMoneyComponent: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    const toastId = toast.loading("Loading..");
     if (!sendersCountry) {
       setSenderCountryError(true);
     }
@@ -111,8 +97,10 @@ const SendMoneyComponent: React.FC = () => {
       });
       const id = res.events[0].parsedJson.id;
       console.log(res);
+      toast.success("Created", { id: toastId });
       router.push(`/marketplace?id=${id}`);
     } catch (error) {
+      toast.error("Error", { id: toastId });
       console.error(error);
     }
   };
