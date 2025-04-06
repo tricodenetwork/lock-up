@@ -142,6 +142,7 @@ const SendMoneyComponent: React.FC = () => {
           <SelectComponent
             error={senderCountryError}
             style="z-50"
+            labelStyles="block text-sm font-medium text-header_black mb-[10px]"
             label="Senders's country"
             onChange={setSender}
             items={countries.all as Country[]}
@@ -160,6 +161,7 @@ const SendMoneyComponent: React.FC = () => {
             error={receiveCountryError}
             style="z-40"
             label="Receiver's country"
+            labelStyles="block text-sm font-medium text-header_black mb-[10px]"
             onChange={setReceiver}
             items={countries.all as Country[]}
             placeholder="Select country"

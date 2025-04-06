@@ -9,6 +9,7 @@ import Image from "next/image";
 
 const SelectComponent = ({
   label,
+  labelStyles,
   items,
   placeholder,
   style,
@@ -19,6 +20,7 @@ const SelectComponent = ({
 }: {
   items: any[];
   label: string;
+  labelStyles: string;
   placeholder: string;
   style?: string;
   error?: boolean;
@@ -96,17 +98,13 @@ const SelectComponent = ({
 
   return (
     <OutsideClickHandler
-      display='contents'
+      display="contents"
       onOutsideClick={() => {
         setOpen(false);
       }}
     >
-      <div className='w-full'>
-        {label && (
-          <label className='block text-sm font-medium text-header_black mb-[10px]'>
-            {label}
-          </label>
-        )}
+      <div className="w-full">
+        {label && <label className={labelStyles}>{label}</label>}
         <div
           onClick={() => {
             setOpen(!open);
@@ -120,7 +118,7 @@ const SelectComponent = ({
             open && "border  border-[#FFDD00]"
           } items-center  relative`}
         >
-          <AnimatePresence mode='wait'>
+          <AnimatePresence mode="wait">
             {open && (
               <motion.div
                 style={{ zIndex: zIndex }}
@@ -136,37 +134,37 @@ const SelectComponent = ({
                 }}
                 exit={{ opacity: 100, height: 0 }}
                 transition={{ duration: 0.1, type: "tween" }}
-                className='w-full shadow-[_0px_0px_20px] bord  max-h-[408px] shadow-black/10 h-max flex flex-col absolute top-[105%]  border border-[#EBECE6] bg-white rounded-[4px]'
+                className="w-full shadow-[_0px_0px_20px] bord  max-h-[408px] shadow-black/10 h-max flex flex-col absolute top-[105%]  border border-[#EBECE6] bg-white rounded-[4px]"
               >
                 {/* Search Input */}
                 {countries && (
                   <div
                     onClick={(e) => e.stopPropagation()}
-                    className='w-[90%] rounded-[4px] relative ml-5 px-5 mt-5    flex items-center text-sm bg-[#FAFAFA] border border-[#EBECE6] min-h-[50px]'
+                    className="w-[90%] rounded-[4px] relative ml-5 px-5 mt-5    flex items-center text-sm bg-[#FAFAFA] border border-[#EBECE6] min-h-[50px]"
                   >
                     <Image
                       src={"/assets/icons/search-normal.svg"}
                       width={14.45}
                       height={14.45}
-                      alt='search'
-                      className='absolute left-[10px]'
+                      alt="search"
+                      className="absolute left-[10px]"
                     />
                     <input
                       ref={searchInputRef}
-                      placeholder='Search country...'
+                      placeholder="Search country..."
                       onChange={(e) => setSearch(e.target.value)}
                       onClick={(e) => e.stopPropagation()}
-                      className='w-full focus:outline-none placeholder:font-normal placeholder:text-header_black/50 px-[10.55px] bg-transparent'
+                      className="w-full focus:outline-none placeholder:font-normal placeholder:text-header_black/50 px-[10.55px] bg-transparent"
                     />
                   </div>
                 )}
 
                 {countries && (
-                  <h6 className='px-5 text-header_black mt-5 mb-2 font-medium text-sm'>
+                  <h6 className="px-5 text-header_black mt-5 mb-2 font-medium text-sm">
                     Frequently selected countries
                   </h6>
                 )}
-                <div className='flex h-max z-50 overflow-y-scroll flex-col'>
+                <div className="flex h-max z-50 overflow-y-scroll flex-col">
                   {filteredItems.map((item, i) => (
                     <button
                       key={i.toString()}
@@ -189,7 +187,7 @@ const SelectComponent = ({
                     >
                       {countries && (
                         <ReactCountryFlag
-                          className='rounded-[2px]'
+                          className="rounded-[2px]"
                           svg
                           countryCode={item.alpha2}
                           style={{
@@ -218,10 +216,10 @@ const SelectComponent = ({
           {!value ? (
             <p className={`${!value && "font-light"} px-5`}>{placeholder}</p>
           ) : (
-            <div className='flex items-center gap-[10px] pl-[14px] w-full'>
+            <div className="flex items-center gap-[10px] pl-[14px] w-full">
               {countries ? (
                 <ReactCountryFlag
-                  className='rounded-[2px]'
+                  className="rounded-[2px]"
                   svg
                   countryCode={value.alpha2}
                   style={{
@@ -243,10 +241,10 @@ const SelectComponent = ({
                   src={"/assets/icons/tick-circle.svg"}
                   width={14}
                   height={14}
-                  alt='tick'
+                  alt="tick"
                 />
               )}
-              <p className='font-medium'>{value.name}</p>
+              <p className="font-medium">{value.name}</p>
             </div>
           )}
           <div
@@ -263,7 +261,7 @@ const SelectComponent = ({
               src={"/assets/icons/arrow-down.svg"}
               width={12}
               height={12}
-              alt='down'
+              alt="down"
             />
           </div>
         </div>

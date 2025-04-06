@@ -20,6 +20,7 @@ const config = {
     extend: {
       colors: {
         appBlue: "#0057DB",
+        appBlack2: "#25272A",
         suiBlue: "#4DA2FF",
         appBlack: "#1B1B1B",
         appYellow: "#FFDD00",
@@ -49,7 +50,6 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
-      
     },
   },
   plugins: [require("tailwindcss-animate")],
