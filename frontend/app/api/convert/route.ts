@@ -44,5 +44,5 @@ const add = async (req: NextRequest) => {
     );
   }
 };
-
+export const dynamic = "force-dynamic";
 export { add as GET };

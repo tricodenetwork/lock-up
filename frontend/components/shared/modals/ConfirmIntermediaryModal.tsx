@@ -3,11 +3,10 @@ import { TransactionInProgress } from "@/actions/transactions";
 import AppButton from "@/components/ui/AppButton";
 import WhiteBackground from "@/components/WhiteBackground";
 import clientConfig from "@/config/clientConfig";
-import { useCustomWallet } from "@/contexts/CustomWallet";
 import { useAppDispatch } from "@/redux/hooks";
 import { setActiveTransaction } from "@/redux/slices/transactions";
 import { Intermediary } from "@/types/Intermediary";
-import { useSuiClient } from "@mysten/dapp-kit";
+import { useCurrentAccount, useSuiClient } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 
 import Image from "next/image";
@@ -27,8 +26,9 @@ const ConfirmIntermediaryModal = ({
   // --------------------------------------------VARIABLES
   const [disabled, setDisabled] = useState(true);
   const router = useRouter();
-  const { executeTransactionBlockWithoutSponsorship, address } =
-    useCustomWallet();
+  const account = useCurrentAccount();
+  const address = account?.address;
+
   const dispatch = useAppDispatch();
 
   const searchParams = useSearchParams();
@@ -51,18 +51,18 @@ const ConfirmIntermediaryModal = ({
         ],
       });
 
-      const res: any = await executeTransactionBlockWithoutSponsorship({
-        tx: txb,
-        options: {
-          showEffects: true,
-          showObjectChanges: true,
-          showEvents: true,
-        },
-      });
-      console.log(res);
-      const transactionId = await TransactionInProgress(id, address as string);
-      dispatch(setActiveTransaction(transactionId?.toString() as string));
-      toast.success("Intermediary Selected", { id: toastId });
+      // const res: any = await executeTransactionBlockWithoutSponsorship({
+      //   tx: txb,
+      //   options: {
+      //     showEffects: true,
+      //     showObjectChanges: true,
+      //     showEvents: true,
+      //   },
+      // });
+      // console.log(res);
+      // const transactionId = await TransactionInProgress(id, address as string);
+      // dispatch(setActiveTransaction(transactionId?.toString() as string));
+      // toast.success("Intermediary Selected", { id: toastId });
     } catch (error) {
       toast.error("Error", { id: toastId });
       console.error(error);
@@ -85,7 +85,7 @@ const ConfirmIntermediaryModal = ({
         </div>
         <div className=" mt-8 lg:mt-0 grid gap-y-2  lg:gap-y-3 grid-cols-1 lg:grid-cols-[1fr,1.3fr]">
           <p className="text-[#757575] text-sm sm:text-xl">
-            Intermediary's Name:
+            Intermediarys&apos; Name:
           </p>
           <p className="text-[#1b1b1b] font-semibold text-lg sm:text-2xl">
             {item.name}

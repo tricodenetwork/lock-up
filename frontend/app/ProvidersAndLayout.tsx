@@ -3,7 +3,6 @@
 import { AuthenticationProvider } from "@/contexts/Authentication";
 import { ChildrenProps } from "@/types/ChildrenProps";
 import React, { useEffect, useState } from "react";
-import { EnokiFlowProvider } from "@mysten/enoki/react";
 import {
   createNetworkConfig,
   SuiClientProvider,
@@ -14,11 +13,11 @@ import { registerStashedWallet } from "@mysten/zksend";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import clientConfig from "@/config/clientConfig";
 import "@mysten/dapp-kit/dist/index.css";
-import CustomWalletProvider from "@/contexts/CustomWallet";
 import { Toaster } from "@/components/ui/sonner";
 import { Toaster as Toast } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
 import { Providers } from "@/redux/Provider";
+import LoginProvider, { LoginContext } from "@/contexts/ZkLoginContext";
 
 export interface StorageAdapter {
   setItem(key: string, value: string): Promise<void>;
@@ -26,13 +25,14 @@ export interface StorageAdapter {
   removeItem(key: string): Promise<void>;
 }
 
-registerStashedWallet("Breaking the Ice - Community Vote", {});
+// registerStashedWallet("Breaking the Ice - Community Vote", {});
 
 export const ProvidersAndLayout = ({ children }: ChildrenProps) => {
   const { networkConfig } = createNetworkConfig({
     testnet: { url: getFullnodeUrl("testnet") },
     mainnet: { url: getFullnodeUrl("mainnet") },
     localnet: { url: getFullnodeUrl("localnet") },
+    devnet: { url: getFullnodeUrl("devnet") },
   });
   const [storage, setStorage] = useState<StorageAdapter | null>(null);
 
@@ -62,25 +62,23 @@ export const ProvidersAndLayout = ({ children }: ChildrenProps) => {
       >
         <WalletProvider
           autoConnect
-          stashedWallet={{
-            name: "Breaking the Ice - Community Vote",
-          }}
-          storage={storage}
+          // stashedWallet={{
+          //   name: "Breaking the Ice - Community Vote",
+          // }}
+          // storage={storage}
         >
-          <EnokiFlowProvider apiKey={clientConfig.ENOKI_API_KEY}>
-            <AuthenticationProvider>
-              <CustomWalletProvider>
-                <Providers>
-                <main className='min-h-screen  relative flex flex-col'>
-                  {children}
-                  <Toaster duration={2000} />
-                  <Toast />
-                  <Analytics />
-                </main>
-                </Providers>
-              </CustomWalletProvider>
-            </AuthenticationProvider>
-          </EnokiFlowProvider>
+          {/* <EnokiFlowProvider apiKey={clientConfig.ENOKI_API_KEY}> */}
+          <LoginProvider>
+            <Providers>
+              <main className="min-h-screen  relative flex flex-col">
+                {children}
+                <Toaster duration={2000} />
+                <Toast position="bottom-left" />
+                <Analytics />
+              </main>
+            </Providers>
+          </LoginProvider>
+          {/* </EnokiFlowProvider> */}
         </WalletProvider>
       </SuiClientProvider>
     </QueryClientProvider>

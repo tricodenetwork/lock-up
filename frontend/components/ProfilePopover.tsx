@@ -15,24 +15,41 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useCustomWallet } from "@/contexts/CustomWallet";
 import { ExternalLink } from "lucide-react";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Transaction } from "@mysten/sui/transactions";
 import clientConfig from "@/config/clientConfig";
 import { useRouter } from "next/navigation";
+import {
+  useConnectWallet,
+  useCurrentAccount,
+  useCurrentWallet,
+  useDisconnectWallet,
+  useWallets,
+} from "@mysten/dapp-kit";
+import { AuthProvider, EnokiWallet, isEnokiWallet } from "@mysten/enoki";
+import { LoginContext } from "@/contexts/ZkLoginContext";
+import { LoginContextType } from "@/types/todo";
 
 export default function ProfilePopover() {
-  const {
-    isConnected,
-    logout,
-    executeTransactionBlockWithoutSponsorship,
-    redirectToAuthUrl,
-    emailAddress,
-    address,
-  } = useCustomWallet();
   const router = useRouter();
+  const { login, address, logout } = useContext(
+    LoginContext
+  ) as LoginContextType;
 
+  const account = useCurrentAccount();
+  const { mutate: connect } = useConnectWallet();
+  const { mutate: disconnect } = useDisconnectWallet();
+  const { isConnected } = useCurrentWallet();
+
+  const wallets = useWallets().filter(isEnokiWallet);
+  const walletsByProvider = wallets.reduce(
+    (map, wallet) => map.set(wallet.provider, wallet),
+    new Map<AuthProvider, EnokiWallet>()
+  );
+
+  const googleWallet = walletsByProvider.get("google");
+  const facebookWallet = walletsByProvider.get("facebook");
   useEffect(() => {
     const registerUser = async () => {
       try {
@@ -43,24 +60,24 @@ export default function ProfilePopover() {
           arguments: [txb.object(clientConfig.APP_ID), txb.object("0x6")],
         });
 
-        const res = await executeTransactionBlockWithoutSponsorship({
-          tx: txb,
-          options: {
-            showEffects: true,
-            showObjectChanges: true,
-          },
-        });
+        // const res = await executeTransactionBlockWithoutSponsorship({
+        //   tx: txb,
+        //   options: {
+        //     showEffects: true,
+        //     showObjectChanges: true,
+        //   },
+        // });
       } catch (error) {}
     };
 
-    if (isConnected) {
+    if (address) {
       router.push("/dashboard");
-      window.location.href = "/dashboard";
+      // window.location.href = "/dashboard";
     }
-    console.log("connected", isConnected);
-  }, [isConnected]);
+    console.log("connected", address);
+  }, [address]);
 
-  if (isConnected) {
+  if (address) {
     return (
       <Popover>
         <PopoverTrigger asChild>
@@ -69,7 +86,7 @@ export default function ProfilePopover() {
               className="hidden bg-appBlack text-white text-sm sm:block  hover:opacity-80  rounded-[12px] w-max px-4 h-[53px]"
               variant={"secondary"}
             >
-              {emailAddress}
+              <span>{`${address?.slice(0, 5)}...${address?.slice(63)}`}</span>
             </Button>
             <Avatar className="block sm:hidden">
               <AvatarImage src="https://github.com/shadcn.png" />
@@ -86,7 +103,7 @@ export default function ProfilePopover() {
                     63
                   )}`}</span>
                   <a
-                    href={`https://suiscan.xyz/testnet/account/${address}`}
+                    href={`https://suiscan.xyz/devnet/account/${address}`}
                     target="_blank"
                   >
                     <ExternalLink width={12} />
@@ -98,8 +115,8 @@ export default function ProfilePopover() {
               <Button
                 variant={"destructive"}
                 size={"sm"}
-                className="w-full p-0 h-max text-center"
-                onClick={logout}
+                className="w-full active:scale-105 p-0 h-max text-center"
+                onClick={() => logout()}
               >
                 Logout
               </Button>
@@ -113,9 +130,7 @@ export default function ProfilePopover() {
   return (
     <Button
       className="bg-appBlack text-white  hover:opacity-80 text-sm rounded-[12px] w-[100px] sm:w-[154px] h-[53px]"
-      onClick={() => {
-        redirectToAuthUrl();
-      }}
+      onClick={login}
     >
       <span className="hidden sm:flex">Connect Wallet</span>
       <span className="block sm:hidden">Connect </span>

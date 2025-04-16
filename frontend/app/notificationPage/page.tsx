@@ -1,6 +1,7 @@
 "use client";
 import All from "@/components/notification/All";
 import NotificationItem from "@/components/NotificationItem";
+import Image from "next/image";
 import React, { useState } from "react";
 
 const NotificationPage = () => {
@@ -39,7 +40,7 @@ const NotificationPage = () => {
 
         <div className="border text-[10px] cursor-pointer flex items-center  gap-1 md:gap-2 font-bold border-[#999999] p-[8px] rounded-[8px]">
           <span className="text-[10px] text-nowrap"> Filter By:</span>{" "}
-          <img src="./icons/filter.svg" />
+          <Image src="/icons/filter.svg" alt="filter" width={24} height={24} />
         </div>
       </div>
 

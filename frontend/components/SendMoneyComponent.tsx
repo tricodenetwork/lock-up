@@ -1,19 +1,20 @@
 // components/SendMoneyComponent.tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
-import WhiteBackground from "./WhiteBackground";
+import clientConfig from "@/config/clientConfig";
+import { LoginContext } from "@/contexts/ZkLoginContext";
 import { useFonts } from "@/hooks/useFonts";
-import SelectComponent from "./ui/SelectComponent";
+import { LoginContextType } from "@/types/todo";
+import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
+import { Transaction } from "@mysten/sui/transactions";
+import axios from "axios";
 import { countries, Country } from "country-data";
 import Image from "next/image";
-import axios from "axios";
-import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Transaction } from "@mysten/sui/transactions";
-import clientConfig from "@/config/clientConfig";
-import { useCustomWallet } from "@/contexts/CustomWallet";
-import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
+import React, { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import SelectComponent from "./ui/SelectComponent";
+import WhiteBackground from "./WhiteBackground";
 
 const SendMoneyComponent: React.FC = () => {
   const [sendersCountry, setSenderCountry] = useState<Country | null>(null);
@@ -25,13 +26,15 @@ const SendMoneyComponent: React.FC = () => {
   const [amountError, setAmountError] = useState(false);
   const { lexend } = useFonts();
   const router = useRouter();
+  const { mutateAsync: signAndExecuteTransaction } =
+    useSignAndExecuteTransaction();
+  const { signAndSubmitTransaction, handleZkProof } = useContext(
+    LoginContext
+  ) as LoginContextType;
+
   const fromSymb = sendersCountry?.currencies[0] ?? "";
   const toSymb = receiversCountry?.currencies[0] ?? "";
-
-  const {
-    executeTransactionBlockWithoutSponsorship,
-    sponsorAndExecuteTransactionBlock,
-  } = useCustomWallet();
+  const client = useSuiClient();
 
   const paymentMethods = [
     { value: "bank", name: "Bank Account" },
@@ -87,18 +90,36 @@ const SendMoneyComponent: React.FC = () => {
         ],
       });
 
-      const res: any = await executeTransactionBlockWithoutSponsorship({
-        tx: txb,
-        options: {
-          showEffects: true,
-          showObjectChanges: true,
-          showEvents: true,
-        },
-      });
-      const id = res.events[0].parsedJson.id;
-      console.log(res);
-      toast.success("Created", { id: toastId });
-      router.push(`/marketplace?id=${id}`);
+      // const { bytes, signature, reportTransactionEffects } =
+      //   await signTransaction({
+      //     transaction: new Transaction(),
+      //     chain: "sui:testnet",
+      //   });
+
+      // const res = await client.executeTransactionBlock({
+      //   transactionBlock: bytes,
+      //   signature,
+      //   options: {
+      //     showObjectChanges: true,
+      //     showEvents: true,
+      //   },
+      // });
+
+      // // Always report transaction effects to the wallet after execution
+      // reportTransactionEffects(res.rawEffects as unknown as string);
+      const result = await signAndSubmitTransaction(txb, toastId);
+      if (result) {
+        const eventsResult = await client.queryEvents({
+          query: { Transaction: result.digest },
+        });
+        // console.log(eventsResult, "events");
+        toast.success("Cross Border Payment Created", { id: toastId });
+
+        if (eventsResult) {
+          const id = eventsResult?.data[0]?.parsedJson as any;
+          router.push(`/marketplace?id=${id.id}`);
+        }
+      }
     } catch (error) {
       toast.error("Error", { id: toastId });
       console.error(error);
@@ -211,7 +232,9 @@ const SendMoneyComponent: React.FC = () => {
                 type="text"
                 placeholder="0.00"
                 readOnly
-                value={sendAmount ? (parseInt(sendAmount) * to).toFixed(0) : ""}
+                value={
+                  sendAmount ? (parseFloat(sendAmount) * to).toFixed(2) : ""
+                }
                 className={`w-full sm:w-[188px] h-[50px] p-4 bg-[#fafafa] border ${
                   amountError ? "border-error" : "border-border"
                 } rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500`}

@@ -2,7 +2,7 @@
 import AppButton from "@/components/ui/AppButton";
 import WhiteBackground from "@/components/WhiteBackground";
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, Suspense, useState } from "react";
 import { upload } from "@vercel/blob/client";
 import toast from "react-hot-toast";
 import { baseUrl } from "@/lib/utils";
@@ -11,7 +11,6 @@ import { useAppSelector } from "@/redux/hooks";
 import { ObjectId } from "mongodb";
 import { Transaction } from "@mysten/sui/transactions";
 import clientConfig from "@/config/clientConfig";
-import { useCustomWallet } from "@/contexts/CustomWallet";
 import { useSearchParams } from "next/navigation";
 import ModalComponent from "./ModalComponent";
 import TransactionSuccessful from "./TransactionSuccessful";
@@ -23,8 +22,7 @@ const ConfirmPaymentSent = () => {
   const [success, setSuccess] = useState(false);
 
   const { activeTransaction } = useAppSelector((state) => state.transactions);
-  const { executeTransactionBlockWithoutSponsorship, address } =
-    useCustomWallet();
+
   const searchParams = useSearchParams();
   const id = searchParams.get("id") as string;
 
@@ -66,17 +64,17 @@ const ConfirmPaymentSent = () => {
           ],
         });
 
-        const res: any = await executeTransactionBlockWithoutSponsorship({
-          tx: txb,
-          options: {
-            showEffects: true,
-            showObjectChanges: true,
-            showEvents: true,
-          },
-        });
-        toast.success("Successful", { id: toastId });
-        setSuccess(true);
-        console.log(res);
+        // const res: any = await executeTransactionBlockWithoutSponsorship({
+        //   tx: txb,
+        //   options: {
+        //     showEffects: true,
+        //     showObjectChanges: true,
+        //     showEvents: true,
+        //   },
+        // });
+        // toast.success("Successful", { id: toastId });
+        // setSuccess(true);
+        // console.log(res);
         // const app: any = await client.getObject({
         //   id: clientConfig.APP_ID,
         //   options: { showContent: true },
@@ -111,10 +109,12 @@ const ConfirmPaymentSent = () => {
       )}
       <div className="border-border border-b pb-6 ">
         <h6 className="font-medium text-xl text-black mb-3">
-          Sender's Details
+          Sender&apos;s Details
         </h6>
         <div className="grid gap-y-1 grid-cols-[2fr,4fr]">
-          <p className="text-[#757575] center-all text-xl">Sender's Name:</p>
+          <p className="text-[#757575] center-all text-xl">
+            Sender&apos;s Name:
+          </p>
           <p className="text-[#1b1b1b] font-semibold text-2xl">
             John Doe (Nigeria)
           </p>
@@ -128,10 +128,12 @@ const ConfirmPaymentSent = () => {
       </div>
       <div className="border-border border-b py-6 ">
         <h6 className="font-medium text-xl text-black mb-3">
-          Receiver's Details
+          Receiver&apos;s Details
         </h6>
         <div className="grid gap-y-1 grid-cols-[2fr,4fr]">
-          <p className="text-[#757575] center-all text-xl">Sender's Name:</p>
+          <p className="text-[#757575] center-all text-xl">
+            Sender&apos;s Name:
+          </p>
           <p className="text-[#1b1b1b] font-semibold text-2xl">
             Nancy Tolu (Nigeria)
           </p>
@@ -202,4 +204,13 @@ const ConfirmPaymentSent = () => {
     </WhiteBackground>
   );
 };
-export default ConfirmPaymentSent;
+
+const ConfirmPaymentSentWithSuspense = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ConfirmPaymentSent />
+    </Suspense>
+  );
+};
+
+export default ConfirmPaymentSentWithSuspense;
