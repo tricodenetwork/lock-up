@@ -1,158 +1,199 @@
 "use client";
-import SendMoneyComponent from "@/components/SendMoneyComponent";
-import { Box } from "@/components/ui/ValueBox";
+import React, { useState, useEffect } from "react";
+import { Bell, Wallet, Search, ChevronDown } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
+import StatsCard from "@/components/ui/StatsCard";
 import WhiteBackground from "@/components/WhiteBackground";
-import clientConfig from "@/config/clientConfig";
-import { LoginContext } from "@/contexts/ZkLoginContext";
-import { LoginContextType } from "@/types/todo";
-import {
-  useCurrentAccount,
-  useCurrentWallet,
-  useSuiClient,
-} from "@mysten/dapp-kit";
-import { Lexend } from "next/font/google";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import OutsideClickHandler from "react-outside-click-handler";
-const lexend = Lexend({ subsets: ["latin", "latin-ext", "vietnamese"] });
+import TransactionNotification from "@/components/TransactionNotification";
+import { AnimatePresence } from "framer-motion";
+import TransactionHistory from "@/components/TransactionHistory";
 
-const boxDetails = [
-  {
-    src: "fast",
-    title: "Fast",
-    desc: "Send money online to loved ones across the world.",
-  },
-  {
-    src: "safe",
-    title: "Safe",
-    desc: "Feel secure knowing we have sent over a billion.",
-  },
-  {
-    src: "great",
-    title: "Great Value",
-    desc: "Great rates, special offers, and no hidden fees.",
-  },
-];
+const DashBoard = () => {
+  const [showNotification, setShowNotification] = useState(false);
 
-const Page = () => {
-  const [send, setSend] = useState(false);
-  const [receive, setReceive] = useState(false);
-  const router = useRouter();
-  const { isConnected } = useCurrentWallet();
-  const account = useCurrentAccount();
-  const client = useSuiClient();
-  const { address, jwt } = useContext(LoginContext) as LoginContextType;
+  const headerContents = [
+    {
+      name: "Total Balance",
+      amount: "1,245.67 SUI",
+    },
+    {
+      name: "Credit Score",
+      amount: "742",
+      color: "#27A943",
+    },
+    {
+      name: "Locked Assets",
+      amount: "850.45 SUI",
+    },
+    {
+      name: "Available Balance",
+      amount: "395.22 SUI",
+    },
+    {
+      name: "Monthly Yield",
+      amount: "3.2%",
+      color: "#27A943",
+    },
+  ];
 
-  const registerUser = async () => {
-    try {
-      // const txb = new Transaction();
+  const statsContents = [
+    {
+      name: "Total Investments",
+      color: "#F0E6F9",
+      icon: "/assets/icons/money.svg",
+      amount: "5,000 SUI",
+    },
+    {
+      name: "Pending Transactions",
+      color: "#FBE4E7",
+      icon: "/assets/icons/arrow-red.svg",
+      amount: "450 SUI",
+    },
+    {
+      name: "Earnings from Interest",
+      color: "#E4FBE9",
+      icon: "/assets/icons/arrow-green.svg",
+      amount: "1,250 SUI",
+    },
+    {
+      name: "Pending Loan",
+      color: "#FBE4E7",
+      icon: "/assets/icons/arrow-red.svg",
+      amount: "1,250 SUI",
+    },
+  ];
 
-      // txb.moveCall({
-      //   target: `${clientConfig.PACKAGE_ID}::lockup::register_user`,
-      //   arguments: [],
-      // });
-
-      // const res = await executeTransactionBlockWithoutSponsorship({
-      //   tx: txb,
-      //   options: {
-      //     showEffects: true,
-      //     showObjectChanges: true,
-      //   },
-      // });
-      const app = await client.getObject({
-        id: clientConfig.APP_ID,
-        options: { showContent: true },
-      });
-
-      console.log(app);
-    } catch (error) {
-      console.error(error);
-    }
-  };
   useEffect(() => {
-    // const address = window.sessionStorage.getItem("address") as string;
-    // const jwt = window.sessionStorage.getItem("jwt") as string;
-    // console.log(address, "connected");
-    // console.log(isConnected, "Connected");
-    // console.log(jwt, "connected");
+    const timer1 = setTimeout(() => {
+      setShowNotification(true);
+    }, 1000);
+    const timer = setTimeout(() => {
+      setShowNotification(false);
+    }, 1000);
 
-    if (!address) {
-      router.push("/");
-      // console.log(!isConnected, "Disconnected");
-      // console.log(address, "not connected");
-      // console.log(jwt, "not connected");
-    }
-  }, [address]);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(timer1);
+    };
+  }, []);
+
   return (
-    <div className="flex  flex-col px-4 min-h-[89.76svh] gap-8 py-8 relative flex-1 justify-around">
-      {/* <div className='absolute w-screen flex justify-center top-10 self-center'>
-        <SendMoneyComponent />
-      </div> */}
-      {!send && !receive && (
-        <section className="flex flex-col gap-[36px] overflow-hidden  items-center">
-          <div className="mx-auto max-w-[581px]">
-            <h3 className="font-semibold text-4xl sm:text-[42px] text-center leading-[1.1]  text-[#212529]">
-              The fast and trusted way to send money online
-            </h3>
-            {
-              <p className="text-sm opacity-50  mt-6 sm:mt-3 text-center mx-auto">
-                Whether you need to send money to friends down the street or
-                family across the globe, Eastern Union gets your funds there
-                quickly and reliably.
-              </p>
-            }
-          </div>
-          <div
-            style={lexend.style}
-            className="sm:flex mx-auto hidden  items-center gap-4"
-          >
-            {boxDetails.map((item) => {
-              return (
-                <Box
-                  key={item.title}
-                  src={item.src}
-                  desc={item.desc}
-                  title={item.title}
-                />
-              );
-            })}
-          </div>
-        </section>
-      )}
-      {!send && !receive && (
-        <section className="gap-8  mx-auto  w-full lg:w-max flex flex-col">
-          {["Send Money", "Receive Money"].map((item) => {
-            return (
-              <WhiteBackground
-                key={item}
-                styles=" w-[95%] active:scale-95 duration-300 lg:w-[1004px] mx-auto h-[111px] hover:scale- hover:border border-header_black/25  duration-100 cursor-pointer rounded-[9px] flex items-center justify-center"
-              >
-                <button
-                  onClick={() =>
-                    item.includes("Send") ? setSend(true) : setReceive(true)
-                  }
-                  className="text-[#666666] flex-1 h-full text-sm"
+    <div className='min-h-screen flex flex-col w-[95%] mx-auto overflow-hidden relative bg-blue-50 p-4 lg:p-10'>
+      {/* Notification */}
+      <AnimatePresence mode='wait'>
+        {showNotification && <TransactionNotification />}
+      </AnimatePresence>
+
+      {/* Main Content */}
+      <div className='mb-6'>
+        <h5 className='text-xl sm:text-2xl font-semibold mb-6'>
+          Welcome Back, User
+        </h5>
+        <WhiteBackground styles='bg-white p-4 sm:p-6 flex flex-col rounded-[16px] h-auto'>
+          <p className='font-medium mb-6'>Asset Overview</p>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-10'>
+            {headerContents.map((item) => (
+              <div key={item.name} className='flex flex-col'>
+                <p className='font-medium mb-2 text-[#757575] text-sm'>
+                  {item.name}
+                </p>
+                <p
+                  style={{ color: item.color }}
+                  className='font-bold text-[#1b1b1b] text-lg sm:text-xl md:text-2xl'
                 >
-                  {item}
-                </button>
-              </WhiteBackground>
-            );
-          })}
-        </section>
-      )}
-      {(send || receive) && (
-        <OutsideClickHandler
-          display="contents"
-          onOutsideClick={() => {
-            setReceive(false);
-            setSend(false);
-          }}
-        >
-          <SendMoneyComponent />
-        </OutsideClickHandler>
-      )}
+                  {item.amount}
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className='flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:items-center'>
+            <span className='text-[#757575] mr-4 text-sm'>Wallet Address</span>
+            <span className='text-[#1b1b1b] text-sm sm:text-base break-all'>
+              1,2450xA1B2C3D4E5F67890G123H456I789J123K456L78M.67 SUI
+            </span>
+          </div>
+        </WhiteBackground>
+      </div>
+
+      {/* Statistics Cards */}
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 w-full'>
+        {statsContents.map((item) => (
+          <StatsCard
+            key={item.name}
+            name={item.name}
+            amount={item.amount}
+            icon={item.icon}
+            color={item.color}
+          />
+        ))}
+      </div>
+
+      {/* Tables */}
+      <div className='grid grid-cols-1 gap-6'>
+        {/* Transaction Details */}
+        <TransactionHistory/>
+
+        {/* Investment History */}
+        {/* <div className='p-6 bg-white rounded-3xl overflow-hidden border-none shadow-none'>
+          <div className='flex  flex-col mb-6 sm:flex-row justify-between items-start sm:items-center  gap-4'>
+            <h3 className='text-base  font-bold text-appBlack'>
+              Investment History
+            </h3>
+            <button className='flex items-center space-x-2 px-3 py-1 border rounded-lg text-xs sm:text-sm w-full sm:w-auto justify-center sm:justify-start'>
+              <span className='text-[#1B1B1B] text-xs font-bold'>
+                Filter By
+              </span>
+              <Image
+                src='/icons/filter.svg'
+                alt='Filter'
+                width={12}
+                height={12}
+              />
+            </button>
+          </div>
+          <div className='overflow-x-auto'>
+            <table className='w-full'>
+              <thead>
+                <tr className='border-b'>
+                  <th className='text-left py-3 text-xs text-appBlack font-bold'>
+                    Date
+                  </th>
+                  <th className='text-left py-3 text-xs text-appBlack font-bold'>
+                    Amount Locked
+                  </th>
+                  <th className='text-left py-3 text-xs text-appBlack font-bold'>
+                    Interest Rate
+                  </th>
+                  <th className='text-left py-3 text-xs text-appBlack font-bold'>
+                    Duration
+                  </th>
+                  <th className='text-left py-3 text-xs text-appBlack font-bold'>
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...Array(6)].map((_, i) => (
+                  <tr key={i} className='border-b'>
+                    <td className='py-3 text-xs'>05/04/2024</td>
+                    <td className='py-3 text-xs'>2,000 SUI</td>
+                    <td className='py-3 text-xs'>5%</td>
+                    <td className='py-3 text-xs'>3 months</td>
+                    <td className='py-3'>
+                      <p className='bg-[#E6F6E5] text-[#2D6A4F] px-2 py-1 w-[70px] text-center rounded-full text-xs'>
+                        Completed
+                      </p>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div> */}
+      </div>
     </div>
   );
 };
 
-export default Page;
+export default DashBoard;

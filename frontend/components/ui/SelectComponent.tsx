@@ -112,7 +112,7 @@ const SelectComponent = ({
           }}
           onKeyDown={handleKeyDown} // Add keyboard event handler
           tabIndex={0} // Make the div focusable
-          className={`flex  cursor-pointer ${style} w-full h-[50px] text-sm bg-[#FAFAFA] border ${
+          className={`flex  cursor-pointer ${style}  h-[50px] text-sm bg-[#FAFAFA] border ${
             error ? "border-error" : "border-[#EBECE6]"
           } rounded-md text-header_black font-light ${
             open && "border  border-[#FFDD00]"

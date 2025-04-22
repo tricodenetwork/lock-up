@@ -79,7 +79,7 @@ const SenderPage = () => {
   }, []);
 
   return (
-    <div className='min-h-screen flex flex-col w-full overflow-hidden relative bg-blue-50 p-4 lg:p-10'>
+    <div className='min-h-screen flex flex-col w-[90%] mx-auto overflow-hidden relative bg-blue-50 p-4 lg:p-10'>
       {/* Notification */}
       <AnimatePresence mode='wait'>
         {showNotification && <TransactionNotification />}

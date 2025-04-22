@@ -39,7 +39,7 @@ const TransactionNotification = ({
       </div>
       <AppButton
         title='View Details'
-        style='w-max bg-appBlue self-center h-[19px] z-50 my-ayto '
+        style='w-max text-white bg-appBlue self-center h-[19px] z-50 my-ayto '
         action={() => console.log("he")}
       />
     </motion.div>

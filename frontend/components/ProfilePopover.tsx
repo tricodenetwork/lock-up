@@ -37,11 +37,6 @@ export default function ProfilePopover() {
     LoginContext
   ) as LoginContextType;
 
-  const account = useCurrentAccount();
-  const { mutate: connect } = useConnectWallet();
-  const { mutate: disconnect } = useDisconnectWallet();
-  const { isConnected } = useCurrentWallet();
-
   const wallets = useWallets().filter(isEnokiWallet);
   const walletsByProvider = wallets.reduce(
     (map, wallet) => map.set(wallet.provider, wallet),

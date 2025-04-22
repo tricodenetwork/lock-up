@@ -5,6 +5,7 @@ import SelectComponent from "@/components/ui/SelectComponent";
 import AppButton from "@/components/ui/AppButton";
 import WhiteBackground from "@/components/WhiteBackground";
 import { countries, Country } from "country-data";
+import PaymentDetails from "@/components/PaymentDetails";
 
 const steps = [
   { name: "Step 1", desc: "Personal details", active: false },
@@ -14,16 +15,26 @@ const steps = [
 
 export default function Home() {
   // State for payment channels
-  const [selectedPayments, setSelectedPayments] = useState(["", "", "", ""]);
+  const [payments, setPayments] = useState(["1"]);
   const [suiWallet, setSuiWallet] = useState("");
   const [country, setCountry] = useState("");
   const [transferRate, setTransferRate] = useState("");
   const [senderCountryError, setSenderCountryError] = useState(false);
 
   const active = true;
+  const addNewCurrency = () => {
+    // Calculate the next number to add to the payments array
+    const nextNumber = (payments.length + 1).toString();
+    setPayments([...payments, nextNumber]);
+  };
+
+  // Function to remove a specific currency by its value
+  const removeCurrency = (item: string) => {
+    setPayments(payments.filter((payment) => payment !== item));
+  };
 
   return (
-    <div className="min-h-screen  w-full bg-blue-50 flex flex-col justify-start items-center">
+    <div className="min-h-screen pb-[224px]  w-full bg-blue-50 flex flex-col justify-start items-center">
       {/* Intermediary 1 */}
       <div className="w-[95%] max-w-[1337px] mb-[44.6px] bg-white mt-[5vh] h-max p-10 flex flex-col gap-4 rounded-[20px] shadow-[4px_4px_33px] shadow-black/5">
         <Image
@@ -42,7 +53,7 @@ export default function Home() {
           you will earn income from carrying out transactions.
         </p>
       </div>
-      <WhiteBackground styles="rounded-[24px] h-[80vh] p-10 w-[90%] max-w-[1317px]">
+      <WhiteBackground styles="rounded-[24px] h-max p-10 w-[90%] max-w-[1317px]">
         <div className="flex items-center gap-2">
           {steps.map((step) => {
             return (
@@ -72,9 +83,11 @@ export default function Home() {
             );
           })}
         </div>
+
         <p className="my-[45px] text-black font-medium text-lg">
           Kindly provide the correct information below
         </p>
+        {/* Step 1 */}
         {/* <div>
           <div className="flex flex-col gap-[27px]">
             <div className="">
@@ -118,15 +131,23 @@ export default function Home() {
             href="#"
           />
         </div> */}
+        {/* Step 2 */}
         <div className="border-[#EBECE6] p-5 flex flex-col border-[1px] rounded-[4px] min-h-[40vh]">
           <h6 className="text-[#212529] mb-4 font-bold">Amount you can Send</h6>
-          <div className="border-[#EBECE6] w-[65%] p-5 flex flex-col border-[1px] rounded-[4px] min-h-[40vh]">
-            <div>
-              <p className="text-appBlack2 font-semibold text-base leading-5">
-                Item 1
-              </p>
-            </div>
+          <div className="border-[#EBECE6] w-[65%] p-5 flex flex-col gap-4 border-[1px] rounded-[4px] h-max">
+            {payments.map((item, index) => (
+              <PaymentDetails
+                remove={removeCurrency}
+                key={index.toString()}
+                item={item}
+              />
+            ))}
           </div>
+          <AppButton
+            title="Add New Currency"
+            style="border-appBlue mt-4 border active:scale-95 bg-white w-[160px] text-appBlue"
+            action={addNewCurrency}
+          />
         </div>
       </WhiteBackground>
     </div>
