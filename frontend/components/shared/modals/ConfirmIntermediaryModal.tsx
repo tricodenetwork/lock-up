@@ -3,15 +3,17 @@ import { TransactionInProgress } from "@/actions/transactions";
 import AppButton from "@/components/ui/AppButton";
 import WhiteBackground from "@/components/WhiteBackground";
 import clientConfig from "@/config/clientConfig";
-import { useAppDispatch } from "@/redux/hooks";
+import { LoginContext } from "@/contexts/ZkLoginContext";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setActiveTransaction } from "@/redux/slices/transactions";
 import { Intermediary } from "@/types/Intermediary";
+import { LoginContextType } from "@/types/todo";
 import { useCurrentAccount, useSuiClient } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 
 const ConfirmIntermediaryModal = ({
@@ -28,6 +30,17 @@ const ConfirmIntermediaryModal = ({
   const router = useRouter();
   const account = useCurrentAccount();
   const address = account?.address;
+  const {
+    sendAmount,
+    senderCountry,
+    receiverAmount,
+    receiverCountry,
+    sendAmountSui,
+  } = useAppSelector((state) => state.payment);
+  const { signAndSubmitTransaction, handleZkProof } = useContext(
+    LoginContext
+  ) as LoginContextType;
+  const client = useSuiClient();
 
   const dispatch = useAppDispatch();
 
@@ -38,18 +51,49 @@ const ConfirmIntermediaryModal = ({
   console.log(address, "address");
 
   const confirmAndNotifyIntermediary = async () => {
-    const toastId = toast.loading("Loading..");
+    const toastId = toast.loading("Creating Payment...");
+    if (
+      !sendAmount ||
+      !receiverAmount ||
+      !sendAmountSui ||
+      !senderCountry ||
+      !receiverCountry ||
+      !sendAmountSui
+    ) {
+      toast.error("Please fill in all fields", { id: toastId });
+      return;
+    }
     try {
       const txb = new Transaction();
 
       txb.moveCall({
-        target: `${clientConfig.PACKAGE_ID}::lockup::select_receiver`,
+        target: `${clientConfig.PACKAGE_ID}::lockup::create_cross_border_payment`,
         arguments: [
           txb.object(clientConfig.APP_ID),
-          txb.pure.u64(parseInt(id) - 1),
-          txb.pure.address(address as string),
+          txb.object(clientConfig.CLOCK_ID),
+          txb.pure.u64(sendAmount),
+          txb.pure.string(senderCountry),
+          txb.pure.u64(receiverAmount),
+          txb.pure.string(receiverCountry),
+          txb.pure.u64(sendAmountSui),
+          txb.pure.address(item.address as string),
         ],
       });
+
+      const result = await signAndSubmitTransaction(txb, toastId);
+      console.log(result, "result");
+      if (result) {
+        const eventsResult = await client.queryEvents({
+          query: { Transaction: result.digest },
+        });
+        // console.log(eventsResult, "events");
+        toast.success("Cross Border Payment Created", { id: toastId });
+
+        // if (eventsResult) {
+        //   const id = eventsResult?.data[0]?.parsedJson as any;
+        //   router.push(`/marketplace/active?id=${id.id}`);
+        // }
+      }
 
       // const res: any = await executeTransactionBlockWithoutSponsorship({
       //   tx: txb,
@@ -97,7 +141,7 @@ const ConfirmIntermediaryModal = ({
               src={"assets/icons/star.svg"}
               width={24}
               height={24}
-              alt="stsr"
+              alt="star"
             />
           </p>
           <p className="text-[#757575] text-sm sm:text-xl">Charge Rate:</p>
@@ -107,7 +151,7 @@ const ConfirmIntermediaryModal = ({
           <p className="text-[#757575] text-sm sm:text-xl">
             Maximum Transaction Capacity:
           </p>
-          <p className="text-[#1b1b1b] font-semibold text-lg sm:text-2xl">{`#${item.maxAmount.toLocaleString()}`}</p>
+          <p className="text-[#1b1b1b] font-semibold text-lg sm:text-2xl">{`#${item?.maxAmount?.toLocaleString()}`}</p>
           <p className="text-[#757575] center-all text-sm lg:text-xl">
             Bank Details:
           </p>
