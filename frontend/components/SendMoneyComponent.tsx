@@ -15,6 +15,8 @@ import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import SelectComponent from "./ui/SelectComponent";
 import WhiteBackground from "./WhiteBackground";
+import { setSlip, Slip } from "@/redux/slices/payment";
+import { useDispatch } from "react-redux";
 
 const SendMoneyComponent: React.FC = () => {
   const [sendersCountry, setSenderCountry] = useState<Country | null>(null);
@@ -26,6 +28,7 @@ const SendMoneyComponent: React.FC = () => {
   const [amountError, setAmountError] = useState(false);
   const { lexend } = useFonts();
   const router = useRouter();
+  const dispatch = useDispatch();
   const { mutateAsync: signAndExecuteTransaction } =
     useSignAndExecuteTransaction();
   const { signAndSubmitTransaction, handleZkProof } = useContext(
@@ -58,7 +61,6 @@ const SendMoneyComponent: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    const toastId = toast.loading("Loading..");
     if (!sendersCountry) {
       setSenderCountryError(true);
     }
@@ -74,56 +76,59 @@ const SendMoneyComponent: React.FC = () => {
       return;
     }
 
+    // Convert the sendAmount (fiat) to SUI using the API
     try {
-      const txb = new Transaction();
+      const fromSymb = sendersCountry?.currencies[0] ?? "";
+      const res = await axios.get(`/api/convert?from=${fromSymb}&to=SUI`);
+      const rate = res.data.message;
+      const sendAmountSui = (parseFloat(sendAmount) / rate).toFixed(6); // 6 decimals for SUI
 
-      txb.moveCall({
-        target: `${clientConfig.PACKAGE_ID}::lockup::create_cross_border_payment`,
-        arguments: [
-          txb.object(clientConfig.APP_ID),
-          txb.object(clientConfig.CLOCK_ID),
-          txb.pure.u64(sendAmount),
-          txb.pure.string(sendersCountry?.alpha3 as string),
-          txb.pure.u64((parseInt(sendAmount) * to).toFixed(0)),
-          txb.pure.string(receiversCountry?.alpha3 as string),
-          txb.pure.u64(30),
-        ],
-      });
+      const slip: Slip = {
+        sendAmount: parseFloat(sendAmount),
+        receiverAmount: (parseFloat(sendAmount) * to).toFixed(
+          2
+        ) as unknown as number,
+        senderCountry: sendersCountry?.alpha3 as string,
+        receiverCountry: receiversCountry?.alpha3 as string,
+        sendAmountSui: parseFloat(sendAmountSui),
+      };
 
-      // const { bytes, signature, reportTransactionEffects } =
-      //   await signTransaction({
-      //     transaction: new Transaction(),
-      //     chain: "sui:testnet",
-      //   });
-
-      // const res = await client.executeTransactionBlock({
-      //   transactionBlock: bytes,
-      //   signature,
-      //   options: {
-      //     showObjectChanges: true,
-      //     showEvents: true,
-      //   },
-      // });
-
-      // // Always report transaction effects to the wallet after execution
-      // reportTransactionEffects(res.rawEffects as unknown as string);
-      const result = await signAndSubmitTransaction(txb, toastId);
-      if (result) {
-        const eventsResult = await client.queryEvents({
-          query: { Transaction: result.digest },
-        });
-        // console.log(eventsResult, "events");
-        toast.success("Cross Border Payment Created", { id: toastId });
-
-        if (eventsResult) {
-          const id = eventsResult?.data[0]?.parsedJson as any;
-          router.push(`/marketplace?id=${id.id}`);
-        }
-      }
-    } catch (error) {
-      toast.error("Error", { id: toastId });
-      console.error(error);
+      dispatch(setSlip(slip));
+      router.push(`/marketplace/active`);
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message ?? "Error converting to SUI",
+        {}
+      );
     }
+
+    // const txb = new Transaction();
+    // txb.moveCall({
+    //   target: `${clientConfig.PACKAGE_ID}::lockup::create_cross_border_payment`,
+    //   arguments: [
+    //     txb.object(clientConfig.APP_ID),
+    //     txb.object(clientConfig.CLOCK_ID),
+    //     txb.pure.u64(sendAmount),
+    //     txb.pure.string(sendersCountry?.alpha3 as string),
+    //     txb.pure.u64((parseFloat(sendAmount) * to).toFixed(0)),
+    //     txb.pure.string(receiversCountry?.alpha3 as string),
+    //     txb.pure.u64(30),
+    //   ],
+    // });
+
+    // const result = await signAndSubmitTransaction(txb, toastId);
+    // if (result) {
+    //   const eventsResult = await client.queryEvents({
+    //     query: { Transaction: result.digest },
+    //   });
+    //   // console.log(eventsResult, "events");
+    //   toast.success("Cross Border Payment Created", { id: toastId });
+
+    //   if (eventsResult) {
+    //     const id = eventsResult?.data[0]?.parsedJson as any;
+    //     router.push(`/marketplace/active?id=${id.id}`);
+    //   }
+    // }
   };
 
   //------------------------------------------------------------------USE EFFECTS

@@ -15,6 +15,7 @@ const clientConfigSchema = z.object({
   GOOGLE_CLIENT_ID: z.string(),
   PACKAGE_ID: z.string(),
   APP_ID: z.string(),
+  VAULT: z.string(),
   CLOCK_ID: z.string(),
   REDIRECT_URI: z.string(),
   MASTER_SEED: z.string(),
@@ -31,6 +32,7 @@ const clientConfig = clientConfigSchema.parse({
   GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
   PACKAGE_ID: process.env.NEXT_PUBLIC_PACKAGE_ID!,
   APP_ID: process.env.NEXT_PUBLIC_APP_ID!,
+  VAULT: process.env.NEXT_PUBLIC_VAULT!,
   CLOCK_ID: process.env.NEXT_PUBLIC_CLOCK_ID!,
   REDIRECT_URI: "http://localhost:3000/auth",
   MASTER_SEED: "tricodelockup", // Replace with a securely stored master seed
