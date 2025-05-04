@@ -13,7 +13,7 @@ export type LoginContextType = {
   zkProofResult: any;
   signAndSubmitTransaction: (
     txb: Transaction,
-    id: string,
+    id?: string,
     recipient?: string,
     amount?: bigint
   ) => Promise<SuiTransactionBlockResponse | undefined>;

@@ -1,8 +1,11 @@
 "use client";
+import { getIntermediaries } from "@/actions/intermediaries";
 import IntermediaryRow from "@/components/ui/IntermediaryRow";
 import SelectComponent from "@/components/ui/SelectComponent";
 import WhiteBackground from "@/components/WhiteBackground";
+import { WithId } from "mongodb";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 // --------------------------------------------CONSTANTS
 const intermediaries = [
@@ -17,10 +20,20 @@ const intermediaries = [
 
 const Active = () => {
   // --------------------------------------------VARIABLES
+  const [intermediaries, setIntermediaries] = useState<any[]>([]);
 
   //-----------------------------------------------------------FUNCTIONS
 
   //------------------------------------------------------------------USE EFFECTS
+
+  useEffect(() => {
+    (async () => {
+      const res = await getIntermediaries();
+      if (res?.ok) {
+        setIntermediaries(res?.data as WithId<Document>[]);
+      }
+    })();
+  }, []);
 
   return (
     <section className="px-[5vw] sm:px-[15vw] flex flex-col min-h-[89.76svh] py-[45px]">
@@ -86,7 +99,7 @@ const Active = () => {
           </h6>
           <h6 className="font-medium text-xl"></h6>
         </div>
-        {new Array(10).fill(intermediaries[0]).map((item, index) => (
+        {intermediaries.map((item, index) => (
           <IntermediaryRow item={item} key={index.toString()} />
         ))}
       </WhiteBackground>
