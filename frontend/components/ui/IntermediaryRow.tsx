@@ -21,12 +21,18 @@ const IntermediaryRow = ({ item }: { item: Intermediary }) => {
   //------------------------------------------------------------------USE EFFECTS
 
   return (
-    <div className='grid border-b px-2 py-4 place-content-center mb-2 w-full border-[#c4c4c4]  h-[113px] lg:h-[79px] grid-cols-[2fr,1fr] lg:grid-cols-[1.5fr,1.5fr,0.8fr]'>
+    <div className="grid border-b px-2 py-4 place-content-center mb-2 w-full border-[#c4c4c4]  h-[113px] lg:h-[79px] grid-cols-[2fr,1fr] lg:grid-cols-[1.5fr,1.5fr,0.8fr]">
       {confirm && (
         <ModalComponent
           isModalOpen={confirm}
           setIsModalOpen={setConfirm}
-          Content={<ConfirmIntermediaryModal proceed={setProceed} item={item} close={setConfirm} />}
+          Content={
+            <ConfirmIntermediaryModal
+              proceed={setProceed}
+              item={item}
+              close={setConfirm}
+            />
+          }
           // Content={<TransactionRecived />}
         />
       )}
@@ -34,34 +40,34 @@ const IntermediaryRow = ({ item }: { item: Intermediary }) => {
         <ModalComponent
           isModalOpen={confirm}
           setIsModalOpen={setConfirm}
-          Content={<ConfirmPaymentSent/>}
+          Content={<ConfirmPaymentSent />}
           // Content={<TransactionRecived />}
         />
       )}
-      <div className='flex gap-1 sm:gap-2   flex-col'>
-        <h6 className='font-bold text-lg'>{item.name}</h6>
-        <div className='flex flex-col sm:flex-row gap-1 sm:gap-3 text-[#666666] items-start lg:items-center'>
-          <span className='text-[10px] sm:text-sm'>{`#${item.maxAmount.toLocaleString()} Max`}</span>
-          <div className='flex items-center gap-1'>
-            <span className='w-1 h-1 rounded-full bg-[#9890A6]' />
-            <span className='text-[10px] sm:text-sm'>{`${item.averageTime} `}</span>
+      <div className="flex gap-1 sm:gap-2   flex-col">
+        <h6 className="font-bold text-lg">{item.name}</h6>
+        <div className="flex flex-col sm:flex-row gap-1 sm:gap-3 text-[#666666] items-start lg:items-center">
+          <span className="text-[10px] sm:text-sm">{`#${item?.maxAmount?.toLocaleString()} Max`}</span>
+          <div className="flex items-center gap-1">
+            <span className="w-1 h-1 rounded-full bg-[#9890A6]" />
+            <span className="text-[10px] sm:text-sm">{`${item?.averageTime} `}</span>
           </div>
-          <div className='flex items-center gap-1'>
-            <span className='w-1 h-1 rounded-full bg-[#9890A6]' />
-            <span className='text-[10px] sm:text-sm'>{`Charge ${item.fee}% `}</span>
+          <div className="flex items-center gap-1">
+            <span className="w-1 h-1 rounded-full bg-[#9890A6]" />
+            <span className="text-[10px] sm:text-sm">{`Charge ${item?.fee}% `}</span>
           </div>
         </div>
       </div>
-      <p className='text-[#1b1b1b] hidden  lg:flex items-center justify-center'>
-        {item.paymentChannel}
+      <p className="text-[#1b1b1b] hidden  lg:flex items-center justify-center">
+        {item?.paymentChannel}
       </p>
-      <div className=' flex flex-col  justify-center items-end gap-3'>
-        <p className='text-[#1b1b1b]  flex lg:hidden items-center justify-center'>
-          {item.paymentChannel}
+      <div className=" flex flex-col  justify-center items-end gap-3">
+        <p className="text-[#1b1b1b]  flex lg:hidden items-center justify-center">
+          {item?.paymentChannel}
         </p>
         <AppButton
-          style='text-white text-xs h-[42px] w-max'
-          title='Select Intermediary'
+          style="text-white text-xs h-[42px] w-max"
+          title="Select Intermediary"
           action={() => setConfirm(true)}
         />
       </div>

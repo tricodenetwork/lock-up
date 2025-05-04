@@ -6,6 +6,7 @@ import { AnimatePresence } from "framer-motion";
 import ReactCountryFlag from "react-country-flag";
 import { hasFlag } from "country-flag-icons";
 import Image from "next/image";
+import { countries as counts } from "country-data";
 
 const SelectComponent = ({
   label,
@@ -16,6 +17,7 @@ const SelectComponent = ({
   onChange,
   countries,
   error,
+  def,
   zIndex,
 }: {
   items: any[];
@@ -27,6 +29,7 @@ const SelectComponent = ({
   countries?: boolean;
   onChange: (e: any) => void;
   zIndex?: number;
+  def?: string;
 }) => {
   // --------------------------------------------VARIABLES
 
@@ -96,6 +99,15 @@ const SelectComponent = ({
     }
   }, [open, search]);
 
+  useEffect(() => {
+    if (def) {
+      const country = counts.all.find((item) => item.name == def);
+      if (country) {
+        setVal(country);
+      }
+    }
+  }, [def]);
+  // console.log(value, def);
   return (
     <OutsideClickHandler
       display="contents"
