@@ -18,16 +18,26 @@ interface NavItem {
 
 // Navigation items array with proper typing
 export const navItems: NavItem[] = [
-  { href: "/dashboard", iconSrc: "/icons/home.svg", alt: "home", label: "Dashboard" },
+  {
+    href: "/dashboard",
+    iconSrc: "/icons/home.svg",
+    alt: "home",
+    label: "Dashboard",
+  },
   {
     href: "/marketplace",
     iconSrc: "/icons/wallet.svg",
     alt: "market",
     label: "P2P Marketplace",
   },
-  { href: "/assets", iconSrc: "/icons/assets.svg", alt: "assets", label: "Assets" },
   {
-    href: "/investments",
+    href: "/assets",
+    iconSrc: "/icons/assets.svg",
+    alt: "assets",
+    label: "Assets",
+  },
+  {
+    href: "/investment",
     iconSrc: "/icons/coins.svg",
     alt: "invest",
     label: "Investments",
