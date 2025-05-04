@@ -1,11 +1,18 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import SelectComponent from "@/components/ui/SelectComponent";
 import AppButton from "@/components/ui/AppButton";
 import WhiteBackground from "@/components/WhiteBackground";
 import { countries, Country } from "country-data";
 import PaymentDetails from "@/components/PaymentDetails";
+import { LoginContext } from "@/contexts/ZkLoginContext";
+import { LoginContextType } from "@/types/todo";
+import {
+  getIntermediary,
+  updatePersonalDetails,
+} from "@/actions/intermediaries";
+import toast from "react-hot-toast";
 
 const steps = [
   { name: "Step 1", desc: "Personal details", active: false },
@@ -15,9 +22,15 @@ const steps = [
 
 export default function Home() {
   // State for payment channels
+  const [intermediary, setIntermediary] = useState<any>(null);
   const [payments, setPayments] = useState(["1"]);
   const [suiWallet, setSuiWallet] = useState("");
-  const [country, setCountry] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [country, setCountry] = useState<Country>();
+  const [step, setStep] = useState(1);
+  const { address } = useContext(LoginContext) as LoginContextType;
+  const [isLoading, setIsLoading] = useState(false);
+
   const [transferRate, setTransferRate] = useState("");
   const [senderCountryError, setSenderCountryError] = useState(false);
 
@@ -33,6 +46,59 @@ export default function Home() {
     setPayments(payments.filter((payment) => payment !== item));
   };
 
+  const nextStep = async (item: string) => {
+    if (
+      intermediary?.name == fullName &&
+      intermediary?.country == country?.name
+    ) {
+      setStep(2);
+      return;
+    }
+    setIsLoading(true);
+    if (!address || !fullName || !country) {
+      toast.error("Fill in all details");
+      setIsLoading(false);
+      return;
+    }
+
+    const res = await updatePersonalDetails(
+      address as string,
+      fullName,
+      country?.name
+    );
+
+    if (res.ok) {
+      setIsLoading(false);
+      setStep(2);
+    } else {
+      setIsLoading(false);
+      toast.error("Database Error");
+    }
+  };
+  const prevStep = () => {
+    setStep(1);
+  };
+
+  console.log(intermediary?.country, intermediary, "coun");
+
+  useEffect(() => {
+    if (!address) {
+      window.location.href = "/";
+    }
+    (async () => {
+      const res = await getIntermediary(address as string);
+      if (res?.ok) {
+        setIntermediary(res.data);
+        setFullName(res?.data?.name);
+        const country = countries.all.find(
+          (item) => item.name == res?.data?.country
+        );
+        if (country) {
+          setCountry(country);
+        }
+      }
+    })();
+  }, [address]);
   return (
     <div className="min-h-screen pb-[224px]  w-full bg-blue-50 flex flex-col justify-start items-center">
       {/* Intermediary 1 */}
@@ -55,28 +121,28 @@ export default function Home() {
       </div>
       <WhiteBackground styles="rounded-[24px] h-max p-10 w-[90%] max-w-[1317px]">
         <div className="flex items-center gap-2">
-          {steps.map((step) => {
+          {steps.map((item, index) => {
             return (
-              <div className="w-1/3 flex flex-col gap-5" key={step.name}>
+              <div className="w-1/3 flex flex-col gap-5" key={item.name}>
                 <div className="flex items-center gap-1">
                   <p
                     className={`font-bold text-lg ${
-                      step.active ? "text-black" : "text-black/50"
+                      step == index + 1 ? "text-black" : "text-black/50"
                     }`}
                   >
-                    {step.name}
+                    {item.name}
                   </p>
                   <p
                     className={`font-semibold text-base ${
-                      step.active ? "text-[#757575]" : "text-[#757575]/50"
+                      step == index + 1 ? "text-[#757575]" : "text-[#757575]/50"
                     } `}
                   >
-                    {step.desc}
+                    {item.desc}
                   </p>
                 </div>
                 <div
                   className={`h-[11px] w-full ${
-                    step.active ? "bg-appBlue" : "bg-[#F0F0F0]"
+                    step == index + 1 ? "bg-appBlue" : "bg-[#F0F0F0]"
                   } rounded-[8px]`}
                 />
               </div>
@@ -88,67 +154,90 @@ export default function Home() {
           Kindly provide the correct information below
         </p>
         {/* Step 1 */}
-        {/* <div>
-          <div className="flex flex-col gap-[27px]">
-            <div className="">
-              <label className="block text-[#212529] text-base font-bold mb-2.5">
-                Full Name
-              </label>
-              <input
-                type="text"
-                className="w-[60%] placeholder:text-[#212529] placeholder:font-light p-3 text-sm bg-[#FAFAFA] border border-gray-[#EBECE6] rounded-md text-header_black font-light focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter full name"
-                value={suiWallet}
-                onChange={(e) => setSuiWallet(e.target.value)}
+        {step == 1 && (
+          <div>
+            <div className="flex flex-col gap-[27px]">
+              <div className="">
+                <label className="block text-[#212529] text-base font-bold mb-2.5">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  className="w-[60%] placeholder:text-[#212529] placeholder:font-light p-3 text-sm bg-[#FAFAFA] border border-gray-[#EBECE6] rounded-md text-header_black font-light focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter full name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+              </div>
+              <SelectComponent
+                error={senderCountryError}
+                def={intermediary?.country}
+                style="z-50 w-[60%]"
+                labelStyles="block text-[#212529] text-base font-bold mb-2.5"
+                label="Country of Residence"
+                onChange={setCountry}
+                items={countries.all as Country[]}
+                placeholder="Select country"
+                countries={!false}
               />
+              <div className="">
+                <label className="block text-[#212529] text-base font-bold mb-2.5">
+                  Average Availability
+                </label>
+                <input
+                  type="text"
+                  className="w-[60%] placeholder:text-[#212529] placeholder:font-light p-3 text-sm bg-[#FAFAFA] border border-gray-[#EBECE6] rounded-md text-header_black font-light focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Select Availability"
+                  value={suiWallet}
+                  onChange={(e) => setSuiWallet(e.target.value)}
+                />
+              </div>
             </div>
-            <SelectComponent
-              error={senderCountryError}
-              style="z-50 w-[60%]"
-              labelStyles="block text-[#212529] text-base font-bold mb-2.5"
-              label="Country of Residence"
-              onChange={setCountry}
-              items={countries.all as Country[]}
-              placeholder="Select country"
-              countries={!false}
+            <AppButton
+              title="Next"
+              isLoading={isLoading}
+              style="w-full text-white font-bold mt-[64px]"
+              action={nextStep}
             />
-            <div className="">
-              <label className="block text-[#212529] text-base font-bold mb-2.5">
-                Average Availability
-              </label>
-              <input
-                type="text"
-                className="w-[60%] placeholder:text-[#212529] placeholder:font-light p-3 text-sm bg-[#FAFAFA] border border-gray-[#EBECE6] rounded-md text-header_black font-light focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Select Availability"
-                value={suiWallet}
-                onChange={(e) => setSuiWallet(e.target.value)}
-              />
-            </div>
           </div>
-          <AppButton
-            title="Next"
-            style="w-full text-white font-bold mt-[64px]"
-            href="#"
-          />
-        </div> */}
+        )}
         {/* Step 2 */}
-        <div className="border-[#EBECE6] p-5 flex flex-col border-[1px] rounded-[4px] min-h-[40vh]">
-          <h6 className="text-[#212529] mb-4 font-bold">Amount you can Send</h6>
-          <div className="border-[#EBECE6] w-[65%] p-5 flex flex-col gap-4 border-[1px] rounded-[4px] h-max">
-            {payments.map((item, index) => (
-              <PaymentDetails
-                remove={removeCurrency}
-                key={index.toString()}
-                item={item}
-              />
-            ))}
+        {step == 2 && (
+          <div className="border-[#EBECE6] p-5 flex flex-col border-[1px] rounded-[4px] min-h-[40vh]">
+            <h6 className="text-[#212529] mb-4 font-bold">
+              Amount you can Send
+            </h6>
+            <div className="border-[#EBECE6] w-[65%] p-5 flex flex-col gap-4 border-[1px] rounded-[4px] h-max">
+              {payments.map((item, index) => (
+                <PaymentDetails
+                  remove={removeCurrency}
+                  key={index.toString()}
+                  item={item}
+                />
+              ))}
+            </div>
+            <AppButton
+              title="Add New Currency"
+              style="border-appBlue mt-4 border active:scale-95 bg-white w-[160px] text-appBlue"
+              action={addNewCurrency}
+            />
           </div>
-          <AppButton
-            title="Add New Currency"
-            style="border-appBlue mt-4 border active:scale-95 bg-white w-[160px] text-appBlue"
-            action={addNewCurrency}
-          />
-        </div>
+        )}
+        {step == 2 && (
+          <div className="flex items-center gap-16">
+            <AppButton
+              title="Previous"
+              style="w-full text-appBlue  hover:bg-slate-50 border-appBlue max-h-[52px] bg-white font-bold mt-[64px]"
+              action={prevStep}
+            />
+            <AppButton
+              title="Next"
+              isLoading={isLoading}
+              style="w-full text-white max-h-[52px] font-bold mt-[64px]"
+              action={nextStep}
+            />
+          </div>
+        )}
       </WhiteBackground>
     </div>
   );
