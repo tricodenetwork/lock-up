@@ -116,7 +116,7 @@ const LoginProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const signAndSubmitTransaction = async (
     txb: Transaction,
-    id: string,
+    id?: string,
     recipient?: string,
     amount?: bigint
   ): Promise<SuiTransactionBlockResponse | undefined> => {
@@ -157,7 +157,7 @@ const LoginProvider: React.FC<{ children: React.ReactNode }> = ({
       // const [coin] = txb.splitCoins(txb.gas, [amount]);
       // txb.transferObjects([coin], recipient);
       txb.setSender(zkLoginUserAddress!);
-      toast.loading("Signing", { id: id });
+      // toast.loading("Signing", { id: id });
       const { bytes, signature: userSignature } = await txb.sign({
         client: suiClient,
         signer: ephemeralKeyPair,
