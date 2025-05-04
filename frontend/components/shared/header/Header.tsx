@@ -134,8 +134,9 @@ const Header = () => {
             alt="notification"
           />
         </div>
-        <button
-          onClick={logout}
+        <Link
+          href={"/profile"}
+          // onClick={logout}
           className="bg-[#1b1b1b] relative w-10 cursor-pointer hover:scale-110 duration-100 h-10 rounded-[12px] flex items-center justify-center"
         >
           <div className="w-[6px] h-[6px] rounded-full backdrop-blur-sm bg-lime-300 absolute top-[6px] right-[6px] animate-pulse" />
@@ -145,7 +146,7 @@ const Header = () => {
             height={20}
             alt="connect"
           />
-        </button>
+        </Link>
       </div>
       {/* <ProfilePopover /> */}
 
